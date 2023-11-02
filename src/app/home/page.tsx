@@ -1,9 +1,9 @@
-import Feed from "@/components/Feed";
+import HydratedFeed from "@/query/HydratedFeed";
 
 export default function Home() {
   return (
     <div className="flex justify-center">
-      <Feed />
+      <HydratedFeed />
     </div>
   );
 }
