@@ -35,7 +35,8 @@ const Tweet = ({ tweetData }: Props) => {
       <div className="flex justify-around">
         <div className="flex justify-center items-center">
           <BiCommentDetail className="h-4 w-4 mr-1" />
-          <span className="text-sm">{tweetData.comments}</span>
+          {/* <span className="text-sm">{tweetData.comments}</span> */}
+          <span className="text-sm">{10}</span>
         </div>
         <div className="flex justify-center items-center">
           <AiOutlineHeart className="h-4 w-4 mr-1" />
