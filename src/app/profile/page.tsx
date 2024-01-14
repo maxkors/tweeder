@@ -3,10 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { cookies, headers } from "next/headers";
 import axios from "axios";
-import getProfile from "@/query/userClient";
+import getProfile, { Profile } from "@/query/userClient";
+import Navigation from "@/components/Navigation";
+import ProfileCard from "@/components/ProfileCard";
 
 const Profile = () => {
-  const [profile, setProfile] = useState();
+  const [profile, setProfile] = useState<Profile>();
 
   useEffect(() => {
     getProfile().then((data) => {
@@ -14,7 +16,12 @@ const Profile = () => {
     });
   }, []);
 
-  return <div>{JSON.stringify(profile, null, 2)}</div>;
+  return (
+    <div className="flex justify-center">
+      <Navigation />
+      <ProfileCard data={profile} />
+    </div>
+  );
 };
 
 export default Profile;
