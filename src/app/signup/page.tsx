@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 
@@ -59,6 +60,12 @@ const SignUp = () => {
             Sign up
           </Button>
         </form>
+        <p className="font-bold mt-3">
+          Already have an account?{" "}
+          <Link href="/signin" className="underline">
+            Sign in
+          </Link>
+        </p>
       </div>
     </div>
   );

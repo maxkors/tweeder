@@ -3,12 +3,20 @@
 import getAllTweets from "@/query/tweetsClient";
 import { useQuery } from "@tanstack/react-query";
 import Tweet, { TweetData } from "./Tweet";
+import { useRouter } from "next/navigation";
 
 const Feed = () => {
-  const { data: tweets, isLoading } = useQuery({
+  const router = useRouter();
+
+  const { data: tweets, isLoading, isError } = useQuery({
     queryKey: ["tweets"],
     queryFn: getAllTweets,
   });
+
+  if (isError) {
+    localStorage.removeItem("jwt_token");
+    router.push("/signin");
+  }
 
   return (
     <div className="min-h-screen w-[100%] md:w-[37.5rem] md:border-x-[1px] border-gray-300">

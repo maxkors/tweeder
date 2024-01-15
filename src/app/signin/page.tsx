@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 
@@ -18,7 +19,7 @@ const SignIn = () => {
       // formData,
       {
         username: formData.get("username"),
-        password: formData.get("password")
+        password: formData.get("password"),
       },
       {
         // headers: {
@@ -55,6 +56,12 @@ const SignIn = () => {
             Sign in
           </Button>
         </form>
+        <p className="font-bold mt-3">
+          Don't have an account?{" "}
+          <Link href="/signup" className="underline">
+            Sign up
+          </Link>
+        </p>
       </div>
     </div>
   );
