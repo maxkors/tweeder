@@ -2,44 +2,36 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import axios from "axios";
+import { signIn } from "@/query/userClient";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent } from "react";
 
 const SignIn = () => {
   const router = useRouter();
-  const onSubmitClick = async (event: any) => {
+
+  const onSubmitHandler = async (event: any) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-    console.log(formData);
 
-    const response = await axios.post(
-      "http://localhost:8081/api/auth/signin",
-      // formData,
-      {
-        username: formData.get("username"),
-        password: formData.get("password"),
-      },
-      {
-        // headers: {
-        //   "Access-Control-Allow-Origin": "*",
-        // },
-        withCredentials: true,
-      }
-    );
+    const username = formData.get("username")?.toString();
+    const password = formData.get("password")?.toString();
 
-    console.log(response.data);
+    if (!username || !password) return;
+    if (username.length < 3 || password.length < 5) return;
 
-    localStorage.setItem("jwt_token", response.data.token);
-    router.replace("/home");
+    const response = await signIn(username, password);
+
+    if (response.status === 200) {
+      localStorage.setItem("jwt_token", response.data.token);
+      router.replace("/home");
+    }
   };
 
   return (
     <div className="flex justify-center">
       <div className="w-80 mt-[20vh]">
         <p className="text-2xl font-bold mb-3">Sign in to Tweeder</p>
-        <form onSubmit={onSubmitClick}>
+        <form onSubmit={onSubmitHandler}>
           <Input
             name="username"
             type="text"

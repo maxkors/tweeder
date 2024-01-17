@@ -2,34 +2,31 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import axios from "axios";
+import { signUp } from "@/query/userClient";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent } from "react";
 
 const SignUp = () => {
   const router = useRouter();
 
-  async function sendSignUpRequest(formData: FormData) {
-    const response = await axios.post("http://localhost:8080/api/signup", {
-      username: formData.get("username"),
-      password: formData.get("password"),
-      name: formData.get("name"),
-      email: formData.get("email"),
-    });
-
-    if (response.status == 200) {
-      console.log(response.data?.token);
-      localStorage.setItem("jwt", response.data?.token);
-      router.push("/home");
-    }
-    // return response.data;
-  }
-
-  const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmitHandler = async (event: any) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    sendSignUpRequest(formData);
+    const formData = new FormData(event.target);
+
+    const name = formData.get("name")?.toString();
+    const email = formData.get("email")?.toString();
+    const username = formData.get("username")?.toString();
+    const password = formData.get("password")?.toString();
+
+    if (!name || !email || !username || !password) return;
+    if (name.length < 3 || email.length < 10 || username.length < 3 || password.length < 5) return;
+
+    const response = await signUp(name, email, username, password);
+
+    if (response.status === 200) {
+      localStorage.setItem("jwt_token", response.data.token);
+      router.replace("/home");
+    }
   };
 
   return (

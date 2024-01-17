@@ -1,14 +1,20 @@
 "use client";
 
-import Comment from "@/components/Comment";
 import Navigation from "@/components/Navigation";
 import Tweet from "@/components/Tweet";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { FaArrowLeft } from "react-icons/fa6";
-import { TweetDataWithComments, getTweetById } from "@/query/tweetClient";
-import { FormEvent, SyntheticEvent, useEffect, useState } from "react";
+import {
+  CommentData,
+  TweetData,
+  TweetDataWithComments,
+  createComment,
+  getTweetById,
+} from "@/query/tweetClient";
+import { FormEvent, SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Comment from "@/components/Comment";
 
 type Props = {
   params: {
@@ -18,17 +24,33 @@ type Props = {
 
 const TweetPage = ({ params }: Props) => {
   const [tweetData, setTweetData] = useState<TweetDataWithComments>();
+  const [comments, setComments] = useState<CommentData[]>([]);
   const router = useRouter();
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    getTweetById(Number(params.id)).then((data) => {
+    getTweetById(Number(params.id)).then((data: TweetDataWithComments) => {
       setTweetData(data);
+      setComments(data.comments);
     });
   }, []);
 
-  const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+
+    const content = formData.get("content")?.toString();
+
+    if (!content || content.length < 1) return;
+
+    const response = await createComment(Number(params.id), content);
+
+    if (response.status === 200) {
+      //@ts-ignore
+      setTweetData((prev) => ({...prev, commentsCount: prev?.commentsCount + 1}));
+      setComments(prev => [...prev, response.data]);
+      textAreaRef.current!.value = "";
+    }
   };
 
   const onBackArrowClick = (event: SyntheticEvent<HTMLElement>) => {
@@ -51,14 +73,16 @@ const TweetPage = ({ params }: Props) => {
           onSubmit={onSubmitHandler}
         >
           <Textarea
+            name="content"
             className="mb-2 resize-none"
             placeholder="Post your comment"
+            ref={textAreaRef}
           />
           <Button className="" type="submit">
             Reply
           </Button>
         </form>
-        {tweetData?.comments.map((comment, id) => (
+        {comments.toReversed().map((comment, id) => (
           <Comment data={comment} key={id} />
         ))}
       </div>

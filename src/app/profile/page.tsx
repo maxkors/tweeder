@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { cookies, headers } from "next/headers";
-import axios from "axios";
-import getProfile, { Profile } from "@/query/userClient";
+import { useEffect, useState } from "react";
+import { Profile, getProfile } from "@/query/userClient";
 import Navigation from "@/components/Navigation";
 import ProfileCard from "@/components/ProfileCard";
 

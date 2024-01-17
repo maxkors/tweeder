@@ -7,7 +7,7 @@ export type Profile = {
   subscribersCount: number;
 };
 
-export default async function getProfile() {
+export async function getProfile() {
   const response = await axios.get("http://localhost:8081/api/profile", {
     headers: {
       Authentication: "Bearer " + localStorage.getItem("jwt_token"),
@@ -15,4 +15,34 @@ export default async function getProfile() {
     withCredentials: true,
   });
   return response.data as Profile;
+}
+
+export async function signIn(username: string, password: string) {
+  const response = await axios.post(
+    "http://localhost:8081/api/auth/signin",
+    {
+      username,
+      password,
+    },
+    {
+      withCredentials: true,
+    }
+  );
+
+  return response;
+}
+
+export async function signUp(name: string, email: string, username: string, password: string) {
+  const response = await axios.post(
+    "http://localhost:8081/api/auth/signup",
+    {
+      username,
+      password,
+    },
+    {
+      withCredentials: true,
+    }
+  );
+
+  return response;
 }

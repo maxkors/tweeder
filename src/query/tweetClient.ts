@@ -12,7 +12,7 @@ export type CommentData = {
   text: string;
   likesCount: number;
   dateTime: string;
-}
+};
 
 export type TweetData = {
   id: number;
@@ -34,27 +34,38 @@ export type TweetDataWithComments = {
 };
 
 export async function getAllTweets() {
-  const response = await axios.get(
-    "http://localhost:8081/api/tweets/feed", 
-    {
-      headers: {
-        Authentication: "Bearer " + localStorage.getItem("jwt_token"),
-      },
-      withCredentials: true
-    }
-  );
+  const response = await axios.get("http://localhost:8081/api/tweets/feed", {
+    headers: {
+      Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+    },
+    withCredentials: true,
+  });
   return response.data;
 }
 
 export async function getTweetById(id: number) {
-  const response = await axios.get(
-    `http://localhost:8081/api/tweets/${id}`, 
+  const response = await axios.get(`http://localhost:8081/api/tweets/${id}`, {
+    headers: {
+      Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+    },
+    withCredentials: true,
+  });
+  return response.data;
+}
+
+export async function createComment(tweetId: number, content: string) {
+  const response = await axios.post(
+    `http://localhost:8081/api/comments`,
+    {
+      tweetId,
+      content,
+    },
     {
       headers: {
         Authentication: "Bearer " + localStorage.getItem("jwt_token"),
       },
-      withCredentials: true
+      withCredentials: true,
     }
   );
-  return response.data;
+  return response;
 }
