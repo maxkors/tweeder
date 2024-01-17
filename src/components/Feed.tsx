@@ -1,8 +1,8 @@
 "use client";
 
-import getAllTweets from "@/query/tweetsClient";
+import {TweetData, getAllTweets} from "@/query/tweetClient";
 import { useQuery } from "@tanstack/react-query";
-import Tweet, { TweetData } from "./Tweet";
+import Tweet from "./Tweet";
 import { useRouter } from "next/navigation";
 
 const Feed = () => {

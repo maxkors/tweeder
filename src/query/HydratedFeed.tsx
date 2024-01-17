@@ -1,6 +1,6 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import getQueryClient from "./getQueryClient";
-import getAllTweets from "./tweetsClient";
+import { getAllTweets } from "./tweetClient";
 import Feed from "@/components/Feed";
 
 export default async function HydratedFeed() {
