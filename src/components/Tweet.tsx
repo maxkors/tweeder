@@ -31,7 +31,7 @@ const Tweet = ({ tweetData, detailed }: Props) => {
         <span className="mr-2 font-bold">{tweetData?.user.name}</span>
         <span className="mr-2 text-gray-600">@{tweetData?.user.username}</span>
         <span className="text-gray-600">
-          {dayjs(tweetData?.dateTime).format("H:m MMM D")}
+          {dayjs(tweetData?.dateTime).format("H:mm MMM D")}
         </span>
       </div>
       <p className={cn("mb-2", detailed && "text-lg")} >{tweetData?.text}</p>

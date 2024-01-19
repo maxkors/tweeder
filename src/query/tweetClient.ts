@@ -53,6 +53,22 @@ export async function getTweetById(id: number) {
   return response.data;
 }
 
+export async function createTweet(content: string) {
+  const response = await axios.post(
+    `http://localhost:8081/api/tweets`,
+    {
+      text: content,
+    },
+    {
+      headers: {
+        Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+      },
+      withCredentials: true,
+    }
+  );
+  return response;
+}
+
 export async function createComment(tweetId: number, content: string) {
   const response = await axios.post(
     `http://localhost:8081/api/comments`,
