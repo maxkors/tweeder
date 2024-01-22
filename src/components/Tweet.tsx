@@ -2,14 +2,14 @@
 
 import dayjs from "dayjs";
 import { BiCommentDetail } from "react-icons/bi";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { SyntheticEvent } from "react";
 import { useRouter } from "next/navigation";
-import { TweetData, TweetDataWithComments } from "@/query/tweetClient";
+import { TweetData, TweetDataWithChildren } from "@/query/tweetClient";
 import { cn } from "@/lib/utils";
 
 type Props = {
-  tweetData?: TweetData | TweetDataWithComments;
+  tweetData?: TweetData | TweetDataWithChildren;
   detailed?: boolean;
 };
 
@@ -34,7 +34,7 @@ const Tweet = ({ tweetData, detailed }: Props) => {
           {dayjs(tweetData?.dateTime).format("H:mm MMM D")}
         </span>
       </div>
-      <p className={cn("mb-2", detailed && "text-lg")} >{tweetData?.text}</p>
+      <p className={cn("mb-2", detailed && "text-lg")}>{tweetData?.text}</p>
       <div className="flex justify-around">
         <div className="flex justify-center items-center">
           <BiCommentDetail className="h-4 w-4 mr-1" />
@@ -42,7 +42,11 @@ const Tweet = ({ tweetData, detailed }: Props) => {
           <span className="text-sm">{tweetData?.commentsCount}</span>
         </div>
         <div className="flex justify-center items-center">
-          <AiOutlineHeart className="h-4 w-4 mr-1" />
+          {tweetData?.liked ? (
+            <AiFillHeart className="h-4 w-4 mr-1" style={{ color: "red" }} />
+          ) : (
+            <AiOutlineHeart className="h-4 w-4 mr-1" />
+          )}
           <span className="text-sm">{tweetData?.likesCount}</span>
         </div>
       </div>

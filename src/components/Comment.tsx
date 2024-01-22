@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
-import { AiOutlineHeart } from "react-icons/ai";
-import { CommentData } from "@/query/tweetClient";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { ChildrenData } from "@/query/tweetClient";
 
 type Props = {
-  data?: CommentData;
+  data?: ChildrenData;
 };
 
 const Comment = ({ data }: Props) => {
@@ -21,7 +21,11 @@ const Comment = ({ data }: Props) => {
       <p className="mb-2">{data?.text}</p>
       <div className="flex justify-around">
         <div className="flex justify-center items-center">
-          <AiOutlineHeart className="h-4 w-4 mr-1" />
+        {data?.liked ? (
+            <AiFillHeart className="h-4 w-4 mr-1" style={{ color: "red" }} />
+          ) : (
+            <AiOutlineHeart className="h-4 w-4 mr-1" />
+          )}
           <span className="text-sm">{data?.likesCount}</span>
         </div>
       </div>

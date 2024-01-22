@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { FaArrowLeft } from "react-icons/fa6";
 import {
-  CommentData,
+  ChildrenData,
   TweetData,
-  TweetDataWithComments,
+  TweetDataWithChildren,
   createComment,
   getTweetById,
 } from "@/query/tweetClient";
@@ -23,15 +23,15 @@ type Props = {
 };
 
 const TweetPage = ({ params }: Props) => {
-  const [tweetData, setTweetData] = useState<TweetDataWithComments>();
-  const [comments, setComments] = useState<CommentData[]>([]);
+  const [tweetData, setTweetData] = useState<TweetDataWithChildren>();
+  const [children, setChildren] = useState<ChildrenData[]>([]);
   const router = useRouter();
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    getTweetById(Number(params.id)).then((data: TweetDataWithComments) => {
+    getTweetById(Number(params.id)).then((data: TweetDataWithChildren) => {
       setTweetData(data);
-      setComments(data.comments);
+      setChildren(data.children);
     });
   }, []);
 
@@ -48,7 +48,7 @@ const TweetPage = ({ params }: Props) => {
     if (response.status === 200) {
       //@ts-ignore
       setTweetData((prev) => ({...prev, commentsCount: prev?.commentsCount + 1}));
-      setComments(prev => [...prev, response.data]);
+      setChildren(prev => [...prev, response.data]);
       textAreaRef.current!.value = "";
     }
   };
@@ -82,8 +82,8 @@ const TweetPage = ({ params }: Props) => {
             Reply
           </Button>
         </form>
-        {comments.toReversed().map((comment, id) => (
-          <Comment data={comment} key={id} />
+        {children.toReversed().map((child, id) => (
+          <Comment data={child} key={id} />
         ))}
       </div>
     </div>

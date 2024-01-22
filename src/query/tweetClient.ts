@@ -6,12 +6,13 @@ export type User = {
   name: string;
 };
 
-export type CommentData = {
+export type ChildrenData = {
   id: number;
   user: User;
   text: string;
   likesCount: number;
   dateTime: string;
+  liked: boolean;
 };
 
 export type TweetData = {
@@ -21,16 +22,18 @@ export type TweetData = {
   commentsCount: number;
   likesCount: number;
   dateTime: string;
+  liked: boolean
 };
 
-export type TweetDataWithComments = {
+export type TweetDataWithChildren = {
   id: number;
   user: User;
-  comments: CommentData[];
+  children: ChildrenData[];
   text: string;
   likesCount: number;
   commentsCount: number;
   dateTime: string;
+  liked: boolean;
 };
 
 export async function getAllTweets() {
