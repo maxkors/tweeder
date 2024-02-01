@@ -13,7 +13,7 @@ import {
 } from "./ui/dialog";
 import { Textarea } from "./ui/textarea";
 import { FormEvent, useState } from "react";
-import { createTweet, getAllTweets } from "@/query/tweetClient";
+import { createPost, getAllTweets } from "@/query/tweetClient";
 import { useQuery } from "@tanstack/react-query";
 
 const Navigation = () => {
@@ -31,7 +31,7 @@ const Navigation = () => {
 
     if (!content || content.length < 1) return;
 
-    const response = await createTweet(content);
+    const response = await createPost(content);
 
     if (response.status === 200) {
       refetch();

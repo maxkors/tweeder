@@ -5,11 +5,11 @@ import { BiCommentDetail } from "react-icons/bi";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { SyntheticEvent } from "react";
 import { useRouter } from "next/navigation";
-import { TweetData, TweetDataWithChildren } from "@/query/tweetClient";
+import { ChildData, TweetDataWithChildren } from "@/query/tweetClient";
 import { cn } from "@/lib/utils";
 
 type Props = {
-  tweetData?: TweetData | TweetDataWithChildren;
+  tweetData?: ChildData | TweetDataWithChildren;
   detailed?: boolean;
 };
 

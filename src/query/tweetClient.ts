@@ -6,11 +6,12 @@ export type User = {
   name: string;
 };
 
-export type ChildrenData = {
+export type ChildData = {
   id: number;
   user: User;
   text: string;
   likesCount: number;
+  commentsCount: number;
   dateTime: string;
   liked: boolean;
 };
@@ -22,13 +23,13 @@ export type TweetData = {
   commentsCount: number;
   likesCount: number;
   dateTime: string;
-  liked: boolean
+  liked: boolean;
 };
 
 export type TweetDataWithChildren = {
   id: number;
   user: User;
-  children: ChildrenData[];
+  children: ChildData[];
   text: string;
   likesCount: number;
   commentsCount: number;
@@ -56,28 +57,32 @@ export async function getTweetById(id: number) {
   return response.data;
 }
 
-export async function createTweet(content: string) {
+export async function getPostsByUsername(username: string) {
+  const response = await axios.get(`http://localhost:8081/api/tweets/users/${username}`, {
+    headers: {
+      Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+    },
+    withCredentials: true,
+  });
+  return response.data;
+}
+
+export async function getLikedPosts(username: string) {
+  const response = await axios.get(`http://localhost:8081/api/tweets/users/${username}/liked`, {
+    headers: {
+      Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+    },
+    withCredentials: true,
+  });
+  return response.data;
+}
+
+export async function createPost(content: string, parentPostId?: number) {
   const response = await axios.post(
     `http://localhost:8081/api/tweets`,
     {
       text: content,
-    },
-    {
-      headers: {
-        Authentication: "Bearer " + localStorage.getItem("jwt_token"),
-      },
-      withCredentials: true,
-    }
-  );
-  return response;
-}
-
-export async function createComment(tweetId: number, content: string) {
-  const response = await axios.post(
-    `http://localhost:8081/api/comments`,
-    {
-      tweetId,
-      content,
+      parentPostId: parentPostId || null,
     },
     {
       headers: {
