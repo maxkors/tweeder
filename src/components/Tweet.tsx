@@ -7,6 +7,7 @@ import { SyntheticEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ChildData, TweetDataWithChildren } from "@/query/tweetClient";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 type Props = {
   tweetData?: ChildData | TweetDataWithChildren;
@@ -16,20 +17,35 @@ type Props = {
 const Tweet = ({ tweetData, detailed }: Props) => {
   const router = useRouter();
 
-  const onClickHandler = (event: SyntheticEvent<HTMLElement>) => {
+  const onPostClickHandler = (event: SyntheticEvent<HTMLElement>) => {
     const tweetId = event.currentTarget.dataset.id;
     router.push(`/tweets/${tweetId}`);
+  };
+
+  const onUserClickHandler = (event: SyntheticEvent<HTMLElement>) => {
+    event.stopPropagation();
+    router.push(`/users/${tweetData?.user.username}`);
   };
 
   return (
     <article
       className="border-b-[1px] border-gray-200 p-2 hover:bg-gray-50 hover:cursor-pointer"
-      onClick={onClickHandler}
+      onClick={onPostClickHandler}
       data-id={tweetData?.id}
     >
       <div className="flex mb-1">
-        <span className="mr-2 font-bold">{tweetData?.user.name}</span>
-        <span className="mr-2 text-gray-600">@{tweetData?.user.username}</span>
+        <span
+          className="mr-2 font-bold hover:underline"
+          onClick={onUserClickHandler}
+        >
+          {tweetData?.user.name}
+        </span>
+        <span
+          className="mr-2 text-gray-600 hover:underline"
+          onClick={onUserClickHandler}
+        >
+          @{tweetData?.user.username}
+        </span>
         <span className="text-gray-600">
           {dayjs(tweetData?.dateTime).format("H:mm MMM D")}
         </span>

@@ -1,12 +1,20 @@
-import { ChildData, getLikedPosts, getPostsByUsername } from "@/query/tweetClient";
+import {
+  ChildData,
+  getLikedPosts,
+  getPostsByUsername,
+} from "@/query/tweetClient";
 import { useEffect, useState } from "react";
 import Tweet from "./Tweet";
 
-const LikedPostsTab = () => {
+type Props = {
+  username: string;
+};
+
+const LikedPostsTab = ({ username }: Props) => {
   const [posts, setPosts] = useState<ChildData[]>([]);
 
   useEffect(() => {
-    getLikedPosts("maximus").then((data) => {
+    getLikedPosts(username).then((data) => {
       setPosts(data);
     });
   }, []);

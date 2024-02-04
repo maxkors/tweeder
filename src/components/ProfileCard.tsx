@@ -8,7 +8,7 @@ import UsersPostsTab from "./UsersPostsTab";
 import LikedPostsTab from "./LikedPostsTab";
 
 type Props = {
-  data?: Profile;
+  data: Profile;
 };
 
 const ProfileCard = ({ data }: Props) => {
@@ -21,14 +21,14 @@ const ProfileCard = ({ data }: Props) => {
 
   return (
     <div className="min-h-screen w-[100%] md:w-[37.5rem] md:border-x-[1px] border-gray-300">
-      <p className="font-bold mx-2">{data?.name}</p>
-      <p className="text-gray-500 mx-2">@{data?.username}</p>
+      <p className="font-bold mx-2">{data.name}</p>
+      <p className="text-gray-500 mx-2">@{data.username}</p>
       <p className="mx-2">
         <span className="mr-3">
-          <b>{data?.subscriptionsCount}</b> Following
+          <b>{data.subscriptionsCount}</b> Following
         </span>
         <span>
-          <b>{data?.subscribersCount}</b> Followers
+          <b>{data.subscribersCount}</b> Followers
         </span>
       </p>
       <Button className="mt-3 mx-2" onClick={onButtonClickHandler}>
@@ -44,10 +44,10 @@ const ProfileCard = ({ data }: Props) => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="posts">
-          <UsersPostsTab />
+          <UsersPostsTab username={data.username} />
         </TabsContent>
         <TabsContent value="likes">
-          <LikedPostsTab />
+          <LikedPostsTab username={data.username} />
         </TabsContent>
       </Tabs>
     </div>

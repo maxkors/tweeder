@@ -15,6 +15,8 @@ import { Textarea } from "./ui/textarea";
 import { FormEvent, useState } from "react";
 import { createPost, getAllTweets } from "@/query/tweetClient";
 import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const Navigation = () => {
   const { refetch } = useQuery({
@@ -22,6 +24,7 @@ const Navigation = () => {
     queryFn: getAllTweets,
   });
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
+  const username = useSelector((state: RootState) => state.profile.username);
 
   const onSubmitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -55,7 +58,7 @@ const Navigation = () => {
           </Link>
         </li>
         <li className="md:mb-4">
-          <Link href="/profile" className="flex">
+          <Link href={`/users/${username}`} className="flex">
             <BsPerson className="h-6 w-6 md:mr-3" />
             <span className="hidden lg:inline">Profile</span>
           </Link>

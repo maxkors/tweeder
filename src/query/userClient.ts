@@ -7,8 +7,8 @@ export type Profile = {
   subscribersCount: number;
 };
 
-export async function getProfile() {
-  const response = await axios.get("http://localhost:8081/api/profile", {
+export async function getProfile(username: string) {
+  const response = await axios.get(`http://localhost:8081/api/profiles/${username}`, {
     headers: {
       Authentication: "Bearer " + localStorage.getItem("jwt_token"),
     },

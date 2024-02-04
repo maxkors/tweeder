@@ -5,11 +5,17 @@ import { Profile, getProfile } from "@/query/userClient";
 import Navigation from "@/components/Navigation";
 import ProfileCard from "@/components/ProfileCard";
 
-const Profile = () => {
+type Props = {
+  params: {
+    username: string;
+  };
+};
+
+const Profile = ({ params }: Props) => {
   const [profile, setProfile] = useState<Profile>();
 
   useEffect(() => {
-    getProfile().then((data) => {
+    getProfile(params.username).then((data) => {
       setProfile(data);
     });
   }, []);
@@ -17,7 +23,7 @@ const Profile = () => {
   return (
     <div className="flex justify-center">
       <Navigation />
-      <ProfileCard data={profile} />
+      {profile ? <ProfileCard data={profile} /> : ""}
     </div>
   );
 };

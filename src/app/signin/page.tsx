@@ -3,10 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { signIn } from "@/query/userClient";
+import { useAppDispatch } from "@/store/hooks";
+import { setProfile } from "@/store/slices/profileSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const SignIn = () => {
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const onSubmitHandler = async (event: any) => {
@@ -22,6 +25,10 @@ const SignIn = () => {
     const response = await signIn(username, password);
 
     if (response.status === 200) {
+      const token = response.data.token;
+      const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+      dispatch(setProfile({ username: tokenPayload.sub, isAuthenticated: true }))
+
       localStorage.setItem("jwt_token", response.data.token);
       router.replace("/home");
     }
