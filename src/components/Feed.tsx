@@ -23,7 +23,7 @@ const Feed = () => {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        tweets?.map((t: TweetData) => <Tweet tweetData={t} key={t.id} />)
+        tweets && tweets.map((t: TweetData) => <Tweet tweetData={t} key={t.id} />)
       )}
     </div>
   );

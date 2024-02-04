@@ -47,8 +47,11 @@ const TweetPage = ({ params }: Props) => {
 
     if (response.status === 200) {
       //@ts-ignore
-      setTweetData((prev) => ({...prev, commentsCount: prev?.commentsCount + 1}));
-      setChildren(prev => [...prev, response.data]);
+      setTweetData((prev) => ({
+        ...prev,
+        commentsCount: prev ? prev.commentsCount + 1 : 1,
+      }));
+      setChildren((prev) => [...prev, response.data]);
       textAreaRef.current!.value = "";
     }
   };
@@ -67,7 +70,7 @@ const TweetPage = ({ params }: Props) => {
           </div>
           <p className="font-bold text-lg">Post</p>
         </header>
-        <Tweet tweetData={tweetData} detailed />
+        {tweetData && <Tweet tweetData={tweetData} detailed />}
         <form
           className="border-b-[1px] border-gray-200 p-2"
           onSubmit={onSubmitHandler}

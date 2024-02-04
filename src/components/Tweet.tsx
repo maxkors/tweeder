@@ -3,19 +3,26 @@
 import dayjs from "dayjs";
 import { BiCommentDetail } from "react-icons/bi";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { SyntheticEvent } from "react";
+import { SyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChildData, TweetDataWithChildren } from "@/query/tweetClient";
+import {
+  ChildData,
+  TweetDataWithChildren,
+  addLikeToPost,
+  removeLikeFromPost,
+} from "@/query/tweetClient";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 
 type Props = {
-  tweetData?: ChildData | TweetDataWithChildren;
+  tweetData: ChildData | TweetDataWithChildren;
   detailed?: boolean;
 };
 
 const Tweet = ({ tweetData, detailed }: Props) => {
   const router = useRouter();
+  const [data, setData] = useState<ChildData | TweetDataWithChildren>(
+    tweetData
+  );
 
   const onPostClickHandler = (event: SyntheticEvent<HTMLElement>) => {
     const tweetId = event.currentTarget.dataset.id;
@@ -27,43 +34,58 @@ const Tweet = ({ tweetData, detailed }: Props) => {
     router.push(`/users/${tweetData?.user.username}`);
   };
 
+  const onLikeClickHandler = (event: SyntheticEvent<HTMLElement>) => {
+    event.stopPropagation();
+
+    if (data.liked) {
+      setData((prev) => ({ ...prev, liked: !prev.liked, likesCount: prev.likesCount - 1 }));
+      removeLikeFromPost(data.id);
+    } else {
+      setData((prev) => ({ ...prev, liked: !prev.liked, likesCount: prev.likesCount + 1 }));
+      addLikeToPost(data.id);
+    }
+  };
+
   return (
     <article
       className="border-b-[1px] border-gray-200 p-2 hover:bg-gray-50 hover:cursor-pointer"
       onClick={onPostClickHandler}
-      data-id={tweetData?.id}
+      data-id={tweetData.id}
     >
       <div className="flex mb-1">
         <span
           className="mr-2 font-bold hover:underline"
           onClick={onUserClickHandler}
         >
-          {tweetData?.user.name}
+          {tweetData.user.name}
         </span>
         <span
           className="mr-2 text-gray-600 hover:underline"
           onClick={onUserClickHandler}
         >
-          @{tweetData?.user.username}
+          @{tweetData.user.username}
         </span>
         <span className="text-gray-600">
-          {dayjs(tweetData?.dateTime).format("H:mm MMM D")}
+          {dayjs(tweetData.dateTime).format("H:mm MMM D")}
         </span>
       </div>
-      <p className={cn("mb-2", detailed && "text-lg")}>{tweetData?.text}</p>
+      <p className={cn("mb-2", detailed && "text-lg")}>{tweetData.text}</p>
       <div className="flex justify-around">
         <div className="flex justify-center items-center">
           <BiCommentDetail className="h-4 w-4 mr-1" />
           {/* <span className="text-sm">{tweetData.comments}</span> */}
-          <span className="text-sm">{tweetData?.commentsCount}</span>
+          <span className="text-sm">{tweetData.commentsCount}</span>
         </div>
-        <div className="flex justify-center items-center">
-          {tweetData?.liked ? (
+        <div
+          className="flex justify-center items-center"
+          onClick={onLikeClickHandler}
+        >
+          {data.liked ? (
             <AiFillHeart className="h-4 w-4 mr-1" style={{ color: "red" }} />
           ) : (
             <AiOutlineHeart className="h-4 w-4 mr-1" />
           )}
-          <span className="text-sm">{tweetData?.likesCount}</span>
+          <span className="text-sm">{data.likesCount}</span>
         </div>
       </div>
     </article>

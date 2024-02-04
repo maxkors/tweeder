@@ -20,7 +20,7 @@ const ProfileCard = ({ data }: Props) => {
   };
 
   return (
-    <div className="min-h-screen w-[100%] md:w-[37.5rem] md:border-x-[1px] border-gray-300">
+    <div >
       <p className="font-bold mx-2">{data.name}</p>
       <p className="text-gray-500 mx-2">@{data.username}</p>
       <p className="mx-2">

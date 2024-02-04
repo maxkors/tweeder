@@ -17,9 +17,7 @@ const UsersPostsTab = ({ username }: Props) => {
 
   return (
     <div>
-      {posts.map((post, id) => (
-        <Tweet tweetData={post} key={id} />
-      ))}
+      {posts && posts.map((post, id) => <Tweet tweetData={post} key={id} />)}
     </div>
   );
 };
