@@ -1,11 +1,14 @@
 "use client";
 
-import { Profile } from "@/query/userClient";
+import UserClient, { Profile } from "@/query/userClient";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UsersPostsTab from "./UsersPostsTab";
 import LikedPostsTab from "./LikedPostsTab";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { useState } from "react";
 
 type Props = {
   data: Profile;
@@ -13,14 +16,36 @@ type Props = {
 
 const ProfileCard = ({ data }: Props) => {
   const router = useRouter();
+  const username = useSelector((state: RootState) => state.profile.username);
+  const [isFollowed, setIsFollowed] = useState<boolean>(data.isFollowed);
 
-  const onButtonClickHandler = () => {
+  const onSignOutClickHandler = () => {
     localStorage.removeItem("jwt_token");
     router.push("/signin");
   };
 
+  const onFollowClickHandler = () => {
+    UserClient.follow(data.username);
+    setIsFollowed(true);
+  };
+
+  const onUnfollowClickHandler = () => {
+    UserClient.unfollow(data.username);
+    setIsFollowed(false);
+  };
+
+  const followButton = isFollowed ? (
+    <Button className="mt-3 mx-2" onClick={onUnfollowClickHandler}>
+      Unfollow
+    </Button>
+  ) : (
+    <Button className="mt-3 mx-2" onClick={onFollowClickHandler}>
+      Follow
+    </Button>
+  );
+
   return (
-    <div >
+    <div>
       <p className="font-bold mx-2">{data.name}</p>
       <p className="text-gray-500 mx-2">@{data.username}</p>
       <p className="mx-2">
@@ -31,9 +56,12 @@ const ProfileCard = ({ data }: Props) => {
           <b>{data.subscribersCount}</b> Followers
         </span>
       </p>
-      <Button className="mt-3 mx-2" onClick={onButtonClickHandler}>
-        Sign out
-      </Button>
+      {data.username === username && (
+        <Button className="mt-3 mx-2" onClick={onSignOutClickHandler}>
+          Sign out
+        </Button>
+      )}
+      {data.username !== username && followButton}
       <Tabs defaultValue="posts" className="mt-2 w-[100%]">
         <TabsList className="mx-2" style={{ width: "calc(100% - 1rem)" }}>
           <TabsTrigger value="posts" className="w-[50%]">
