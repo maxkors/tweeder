@@ -70,7 +70,9 @@ const TweetPage = ({ params }: Props) => {
           </div>
           <p className="font-bold text-lg">Post</p>
         </header>
+        
         {tweetData && <Tweet tweetData={tweetData} detailed />}
+        
         <form
           className="border-b-[1px] border-gray-200 p-2"
           onSubmit={onSubmitHandler}
@@ -85,6 +87,7 @@ const TweetPage = ({ params }: Props) => {
             Reply
           </Button>
         </form>
+        
         {children.toReversed().map((child, id) => (
           <Tweet tweetData={child} key={id} />
         ))}

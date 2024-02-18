@@ -17,7 +17,12 @@ export default function StoreProvider({
   if (!storeRef.current) {
     storeRef.current = makeStore();
 
-    const token = localStorage.getItem("jwt_token");
+    let token = null;
+
+    if (process.browser) {
+      console.log(localStorage);
+      token = localStorage.getItem("jwt_token");
+    }
 
     if (token) {
       const tokenPayload = JSON.parse(atob(token.split(".")[1]));

@@ -38,13 +38,30 @@ const Tweet = ({ tweetData, detailed }: Props) => {
     event.stopPropagation();
 
     if (data.liked) {
-      setData((prev) => ({ ...prev, liked: !prev.liked, likesCount: prev.likesCount - 1 }));
+      setData((prev) => ({
+        ...prev,
+        liked: !prev.liked,
+        likesCount: prev.likesCount - 1,
+      }));
       removeLikeFromPost(data.id);
     } else {
-      setData((prev) => ({ ...prev, liked: !prev.liked, likesCount: prev.likesCount + 1 }));
+      setData((prev) => ({
+        ...prev,
+        liked: !prev.liked,
+        likesCount: prev.likesCount + 1,
+      }));
       addLikeToPost(data.id);
     }
   };
+
+  // const mediaHeightClass = `h-[${tweetData.media.length > 2 ? '50%' : '100%'}]`;
+  // const mediaWidthClass= `w-[${tweetData.media.length > 1 ? '50%' : '100%'}]`;
+  // max-h-[50%]
+
+  const mediaHeightClass = () =>
+    tweetData.media.length > 2 ? "calc(10rem - 1px)" : "20rem";
+  const mediaWidthClass = () =>
+    tweetData.media.length > 1 ? "calc(50% - 1px)" : "100%";
 
   return (
     <article
@@ -69,7 +86,29 @@ const Tweet = ({ tweetData, detailed }: Props) => {
           {dayjs(tweetData.dateTime).format("H:mm MMM D")}
         </span>
       </div>
+
       <p className={cn("mb-2", detailed && "text-lg")}>{tweetData.text}</p>
+
+      {tweetData.media.length > 0 && (
+        <div className="mb-2 rounded-lg overflow-hidden h-[20rem] flex flex-wrap gap-[2px]">
+          {tweetData.media.map((media, id) => (
+            <div
+              className={`overflow-hidden`}
+              key={id}
+              style={{ height: mediaHeightClass(), width: mediaWidthClass() }}
+            >
+              {media.type === "image" && (
+                <img
+                  src={`http://localhost/images/${media?.urn}`}
+                  alt=""
+                  className={`object-cover object-center h-[100%] w-[100%]`}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="flex justify-around">
         <div className="flex justify-center items-center">
           <BiCommentDetail className="h-4 w-4 mr-1" />

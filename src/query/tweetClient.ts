@@ -6,6 +6,12 @@ export type User = {
   name: string;
 };
 
+export type Media = {
+  id: number;
+  type: string;
+  urn: string;
+};
+
 export type ChildData = {
   id: number;
   user: User;
@@ -13,6 +19,7 @@ export type ChildData = {
   likesCount: number;
   commentsCount: number;
   dateTime: string;
+  media: Media[];
   liked: boolean;
 };
 
@@ -23,6 +30,7 @@ export type TweetData = {
   commentsCount: number;
   likesCount: number;
   dateTime: string;
+  media: Media[];
   liked: boolean;
 };
 
@@ -34,6 +42,7 @@ export type TweetDataWithChildren = {
   likesCount: number;
   commentsCount: number;
   dateTime: string;
+  media: Media[];
   liked: boolean;
 };
 
