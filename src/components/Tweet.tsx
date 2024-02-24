@@ -3,23 +3,42 @@
 import dayjs from "dayjs";
 import { BiCommentDetail } from "react-icons/bi";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { IoBookmark, IoBookmarkOutline, IoLink } from "react-icons/io5";
+import { FiShare2 } from "react-icons/fi";
+import { BsEnvelope } from "react-icons/bs";
+
 import { SyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ChildData,
   TweetDataWithChildren,
   addLikeToPost,
+  deletePostById,
   removeLikeFromPost,
 } from "@/query/tweetClient";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Button } from "./ui/button";
+import { IoIosMore } from "react-icons/io";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 type Props = {
   tweetData: ChildData | TweetDataWithChildren;
   detailed?: boolean;
+  onDeletionHandler: (id: number) => void;
 };
 
-const Tweet = ({ tweetData, detailed }: Props) => {
+const Tweet = ({ tweetData, detailed, onDeletionHandler }: Props) => {
   const router = useRouter();
+  const username = useSelector((state: RootState) => state.profile.username);
   const [data, setData] = useState<ChildData | TweetDataWithChildren>(
     tweetData
   );
@@ -63,6 +82,12 @@ const Tweet = ({ tweetData, detailed }: Props) => {
   const mediaWidthClass = () =>
     tweetData.media.length > 1 ? "calc(50% - 1px)" : "100%";
 
+  const deletionHandler = (event: SyntheticEvent<HTMLElement>) => {
+    event.stopPropagation();
+    onDeletionHandler(tweetData.id);
+    deletePostById(tweetData.id);
+  };
+
   return (
     <article
       className="border-b-[1px] border-gray-200 p-2 hover:bg-gray-50 hover:cursor-pointer"
@@ -85,6 +110,31 @@ const Tweet = ({ tweetData, detailed }: Props) => {
         <span className="text-gray-600">
           {dayjs(tweetData.dateTime).format("H:mm MMM D")}
         </span>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="ml-auto rounded-full h-8 w-8"
+            >
+              <IoIosMore className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuGroup>
+              {tweetData.user.username === username && (
+                <DropdownMenuItem
+                  className="text-red-600"
+                  onClick={(e) => deletionHandler(e)}
+                >
+                  <FaRegTrashAlt />
+                  <span className="font-bold ml-2">Delete</span>
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <p className={cn("mb-2", detailed && "text-lg")}>{tweetData.text}</p>
@@ -115,6 +165,7 @@ const Tweet = ({ tweetData, detailed }: Props) => {
           {/* <span className="text-sm">{tweetData.comments}</span> */}
           <span className="text-sm">{tweetData.commentsCount}</span>
         </div>
+
         <div
           className="flex justify-center items-center"
           onClick={onLikeClickHandler}
@@ -126,6 +177,40 @@ const Tweet = ({ tweetData, detailed }: Props) => {
           )}
           <span className="text-sm">{data.likesCount}</span>
         </div>
+
+        <div
+          className="flex justify-center items-center"
+          onClick={onLikeClickHandler}
+        >
+          {data.bookmarked ? (
+            <IoBookmark className="h-4 w-4 mr-1" style={{ color: "blue" }} />
+          ) : (
+            <IoBookmarkOutline className="h-4 w-4" />
+          )}
+        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div
+              className="flex justify-center items-center"
+              onClick={onLikeClickHandler}
+            >
+              <FiShare2 className="h-4 w-4" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <IoLink />
+                <span className="font-bold ml-2">Copy link</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <BsEnvelope />
+                <span className="font-bold ml-2">Share via Direct Message</span>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </article>
   );

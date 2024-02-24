@@ -21,6 +21,7 @@ export type ChildData = {
   dateTime: string;
   media: Media[];
   liked: boolean;
+  bookmarked: boolean;
 };
 
 export type TweetData = {
@@ -32,6 +33,7 @@ export type TweetData = {
   dateTime: string;
   media: Media[];
   liked: boolean;
+  bookmarked: boolean;
 };
 
 export type TweetDataWithChildren = {
@@ -44,6 +46,7 @@ export type TweetDataWithChildren = {
   dateTime: string;
   media: Media[];
   liked: boolean;
+  bookmarked: boolean;
 };
 
 const getConfigWithToken = () => ({
@@ -63,6 +66,14 @@ export async function getAllTweets() {
 
 export async function getTweetById(id: number) {
   const response = await axios.get(
+    `http://localhost:8081/api/tweets/${id}`,
+    getConfigWithToken()
+  );
+  return response.data;
+}
+
+export async function deletePostById(id: number) {
+  const response = await axios.delete(
     `http://localhost:8081/api/tweets/${id}`,
     getConfigWithToken()
   );

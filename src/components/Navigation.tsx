@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { AiOutlineHome } from "react-icons/ai";
 import { BsPerson, BsEnvelope } from "react-icons/bs";
+import { IoBookmarkOutline } from "react-icons/io5";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -55,6 +56,12 @@ const Navigation = () => {
           <Link href="/messages" className="flex">
             <BsEnvelope className="h-6 w-6 md:mr-3" />
             <span className="hidden lg:inline">Messages</span>
+          </Link>
+        </li>
+        <li className="md:mb-4">
+          <Link href="/messages" className="flex">
+            <IoBookmarkOutline className="h-6 w-6 md:mr-3" />
+            <span className="hidden lg:inline">Bookmarks</span>
           </Link>
         </li>
         <li className="md:mb-4">
