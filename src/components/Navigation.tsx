@@ -59,7 +59,7 @@ const Navigation = () => {
           </Link>
         </li>
         <li className="md:mb-4">
-          <Link href="/messages" className="flex">
+          <Link href="/bookmarks" className="flex">
             <IoBookmarkOutline className="h-6 w-6 md:mr-3" />
             <span className="hidden lg:inline">Bookmarks</span>
           </Link>

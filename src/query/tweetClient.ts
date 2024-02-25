@@ -124,3 +124,28 @@ export async function removeLikeFromPost(id: number) {
   );
   return response;
 }
+
+export async function addPostToBookmarks(id: number) {
+  const response = await axios.post(
+    `http://localhost:8081/api/tweets/${id}/bookmark`,
+    null,
+    getConfigWithToken()
+  );
+  return response;
+}
+
+export async function removePostFromBookmarks(id: number) {
+  const response = await axios.delete(
+    `http://localhost:8081/api/tweets/${id}/bookmark`,
+    getConfigWithToken()
+  );
+  return response;
+}
+
+export async function getBookmarkedPosts() {
+  const response = await axios.get(
+    `http://localhost:8081/api/tweets/bookmarked`,
+    getConfigWithToken()
+  );
+  return response;
+}

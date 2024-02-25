@@ -13,8 +13,10 @@ import {
   ChildData,
   TweetDataWithChildren,
   addLikeToPost,
+  addPostToBookmarks,
   deletePostById,
   removeLikeFromPost,
+  removePostFromBookmarks,
 } from "@/query/tweetClient";
 import { cn } from "@/lib/utils";
 import {
@@ -33,7 +35,7 @@ import { RootState } from "@/store/store";
 type Props = {
   tweetData: ChildData | TweetDataWithChildren;
   detailed?: boolean;
-  onDeletionHandler: (id: number) => void;
+  onDeletionHandler?: (id: number) => void;
 };
 
 const Tweet = ({ tweetData, detailed, onDeletionHandler }: Props) => {
@@ -73,19 +75,34 @@ const Tweet = ({ tweetData, detailed, onDeletionHandler }: Props) => {
     }
   };
 
-  // const mediaHeightClass = `h-[${tweetData.media.length > 2 ? '50%' : '100%'}]`;
-  // const mediaWidthClass= `w-[${tweetData.media.length > 1 ? '50%' : '100%'}]`;
-  // max-h-[50%]
-
   const mediaHeightClass = () =>
     tweetData.media.length > 2 ? "calc(10rem - 1px)" : "20rem";
+
   const mediaWidthClass = () =>
     tweetData.media.length > 1 ? "calc(50% - 1px)" : "100%";
 
   const deletionHandler = (event: SyntheticEvent<HTMLElement>) => {
     event.stopPropagation();
-    onDeletionHandler(tweetData.id);
+    onDeletionHandler && onDeletionHandler(tweetData.id);
     deletePostById(tweetData.id);
+  };
+
+  const bookmarkHandler = (event: SyntheticEvent<HTMLElement>) => {
+    event.stopPropagation();
+
+    if (data.bookmarked) {
+      setData((prev) => ({
+        ...prev,
+        bookmarked: !prev.bookmarked,
+      }));
+      removePostFromBookmarks(data.id);
+    } else {
+      setData((prev) => ({
+        ...prev,
+        bookmarked: !prev.bookmarked,
+      }));
+      addPostToBookmarks(data.id);
+    }
   };
 
   return (
@@ -180,10 +197,10 @@ const Tweet = ({ tweetData, detailed, onDeletionHandler }: Props) => {
 
         <div
           className="flex justify-center items-center"
-          onClick={onLikeClickHandler}
+          onClick={bookmarkHandler}
         >
           {data.bookmarked ? (
-            <IoBookmark className="h-4 w-4 mr-1" style={{ color: "blue" }} />
+            <IoBookmark className="h-4 w-4 mr-1" style={{ color: "lightblue" }} />
           ) : (
             <IoBookmarkOutline className="h-4 w-4" />
           )}
@@ -193,7 +210,6 @@ const Tweet = ({ tweetData, detailed, onDeletionHandler }: Props) => {
           <DropdownMenuTrigger asChild>
             <div
               className="flex justify-center items-center"
-              onClick={onLikeClickHandler}
             >
               <FiShare2 className="h-4 w-4" />
             </div>
