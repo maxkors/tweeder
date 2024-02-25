@@ -105,6 +105,10 @@ const Tweet = ({ tweetData, detailed, onDeletionHandler }: Props) => {
     }
   };
 
+  const copyToClipboardHandler = () => {
+    navigator.clipboard.writeText(`http://localhost:3000/tweets/${tweetData.id}`);
+  }
+
   return (
     <article
       className="border-b-[1px] border-gray-200 p-2 hover:bg-gray-50 hover:cursor-pointer"
@@ -216,7 +220,7 @@ const Tweet = ({ tweetData, detailed, onDeletionHandler }: Props) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={copyToClipboardHandler}>
                 <IoLink />
                 <span className="font-bold ml-2">Copy link</span>
               </DropdownMenuItem>
