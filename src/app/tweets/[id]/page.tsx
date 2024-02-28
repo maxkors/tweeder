@@ -10,11 +10,18 @@ import {
   TweetData,
   TweetDataWithChildren,
   createPost,
+  deletePostById,
   getTweetById,
 } from "@/query/tweetClient";
-import { FormEvent, SyntheticEvent, useEffect, useRef, useState } from "react";
+import {
+  FormEvent,
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useRouter } from "next/navigation";
-import Comment from "@/components/Comment";
 
 type Props = {
   params: {
@@ -39,19 +46,23 @@ const TweetPage = ({ params }: Props) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
-    const content = formData.get("content")?.toString();
+    const text = formData.get("text")?.toString();
 
-    if (!content || content.length < 1) return;
+    if (!text || text.length < 1) return;
 
-    const response = await createPost(content, Number(params.id));
+    const response = await createPost(text, [], Number(params.id));
 
     if (response.status === 200) {
       //@ts-ignore
-      setTweetData((prev) => ({
-        ...prev,
-        commentsCount: prev ? prev.commentsCount + 1 : 1,
-      }));
-      setChildren((prev) => [...prev, response.data]);
+      // setTweetData((prev) => ({
+      //   ...prev,
+      //   commentsCount: prev ? prev.commentsCount + 1 : 1,
+      // }));
+      // setChildren((prev) => [...prev, response.data]);
+      getTweetById(Number(params.id)).then((data: TweetDataWithChildren) => {
+        setTweetData(data);
+        setChildren(data.children);
+      });
       textAreaRef.current!.value = "";
     }
   };
@@ -59,6 +70,20 @@ const TweetPage = ({ params }: Props) => {
   const onBackArrowClick = (event: SyntheticEvent<HTMLElement>) => {
     router.back();
   };
+
+  const onTweetDeletionHandler = useCallback((id: number) => {
+    //@ts-ignore
+    setTweetData((prev) => ({
+      ...prev,
+      //@ts-ignore
+      commentsCount: prev.commentsCount - 1,
+    }));
+    setChildren((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  const onMainTweetDeletionHandler = useCallback((id: number) => {
+    router.replace("/home");
+  }, []);
 
   return (
     <div className="flex justify-center">
@@ -70,15 +95,21 @@ const TweetPage = ({ params }: Props) => {
           </div>
           <p className="font-bold text-lg">Post</p>
         </header>
-        
-        {tweetData && <Tweet tweetData={tweetData} detailed />}
-        
+
+        {tweetData && (
+          <Tweet
+            tweetData={tweetData}
+            detailed
+            onDeletionHandler={onMainTweetDeletionHandler}
+          />
+        )}
+
         <form
           className="border-b-[1px] border-gray-200 p-2"
           onSubmit={onSubmitHandler}
         >
           <Textarea
-            name="content"
+            name="text"
             className="mb-2 resize-none"
             placeholder="Post your comment"
             ref={textAreaRef}
@@ -87,9 +118,13 @@ const TweetPage = ({ params }: Props) => {
             Reply
           </Button>
         </form>
-        
+
         {children.toReversed().map((child, id) => (
-          <Tweet tweetData={child} key={id} />
+          <Tweet
+            tweetData={child}
+            key={id}
+            onDeletionHandler={onTweetDeletionHandler}
+          />
         ))}
       </div>
     </div>

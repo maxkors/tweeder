@@ -83,8 +83,8 @@ const Tweet = ({ tweetData, detailed, onDeletionHandler }: Props) => {
 
   const deletionHandler = (event: SyntheticEvent<HTMLElement>) => {
     event.stopPropagation();
-    onDeletionHandler && onDeletionHandler(tweetData.id);
     deletePostById(tweetData.id);
+    onDeletionHandler && onDeletionHandler(tweetData.id);
   };
 
   const bookmarkHandler = (event: SyntheticEvent<HTMLElement>) => {

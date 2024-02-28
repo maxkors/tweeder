@@ -35,7 +35,7 @@ const Navigation = () => {
 
     if (!content || content.length < 1) return;
 
-    const response = await createPost(content);
+    const response = await createPost(content, []);
 
     if (response.status === 200) {
       refetch();

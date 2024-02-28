@@ -77,7 +77,7 @@ export async function deletePostById(id: number) {
     `http://localhost:8081/api/tweets/${id}`,
     getConfigWithToken()
   );
-  return response.data;
+  return response;
 }
 
 export async function getPostsByUsername(username: string) {
@@ -96,11 +96,12 @@ export async function getLikedPosts(username: string) {
   return response.data;
 }
 
-export async function createPost(content: string, parentPostId?: number) {
+export async function createPost(text: string, media: Media[], parentPostId?: number) {
   const response = await axios.post(
     `http://localhost:8081/api/tweets`,
     {
-      text: content,
+      text,
+      media,
       parentPostId: parentPostId || null,
     },
     getConfigWithToken()
