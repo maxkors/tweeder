@@ -1,19 +1,13 @@
 "use client";
 
-import { SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import Navigation from "@/components/Navigation";
 import { ChildData, getBookmarkedPosts } from "@/query/tweetClient";
 import Tweet from "@/components/Tweet";
 import { FaArrowLeft } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
-type Props = {
-  params: {
-    username: string;
-  };
-};
-
-const BookmarksPage = ({ params }: Props) => {
+const BookmarksPage = () => {
   const [posts, setPosts] = useState<ChildData[]>([]);
   const router = useRouter();
 
@@ -27,6 +21,10 @@ const BookmarksPage = ({ params }: Props) => {
     router.back();
   };
 
+  const onBookmarkRemoval = useCallback((id: number) => {
+    setPosts((prev) => prev.filter((p) => p.id !== id));
+  }, []);
+
   return (
     <div className="flex justify-center">
       <Navigation />
@@ -37,7 +35,14 @@ const BookmarksPage = ({ params }: Props) => {
           </div>
           <p className="font-bold text-lg">Bookmarks</p>
         </header>
-        {posts && posts.map((post, id) => <Tweet tweetData={post} key={id} />)}
+        {posts &&
+          posts.map((post, id) => (
+            <Tweet
+              tweetData={post}
+              key={id}
+              onBookmarkRemovalHandler={onBookmarkRemoval}
+            />
+          ))}
       </div>
     </div>
   );

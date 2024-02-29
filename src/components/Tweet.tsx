@@ -36,9 +36,10 @@ type Props = {
   tweetData: ChildData | TweetDataWithChildren;
   detailed?: boolean;
   onDeletionHandler?: (id: number) => void;
+  onBookmarkRemovalHandler?: (id: number) => void;
 };
 
-const Tweet = ({ tweetData, detailed, onDeletionHandler }: Props) => {
+const Tweet = ({ tweetData, detailed, onDeletionHandler, onBookmarkRemovalHandler }: Props) => {
   const router = useRouter();
   const username = useSelector((state: RootState) => state.profile.username);
   const [data, setData] = useState<ChildData | TweetDataWithChildren>(
@@ -95,6 +96,7 @@ const Tweet = ({ tweetData, detailed, onDeletionHandler }: Props) => {
         ...prev,
         bookmarked: !prev.bookmarked,
       }));
+      onBookmarkRemovalHandler && onBookmarkRemovalHandler(data.id);
       removePostFromBookmarks(data.id);
     } else {
       setData((prev) => ({
@@ -111,7 +113,7 @@ const Tweet = ({ tweetData, detailed, onDeletionHandler }: Props) => {
 
   return (
     <article
-      className="border-b-[1px] border-gray-200 p-2 hover:bg-gray-50 hover:cursor-pointer"
+      className="border-b-[1px] border-gray-200 p-2 hover:bg-gray-50 cursor-pointer"
       onClick={onPostClickHandler}
       data-id={tweetData.id}
     >

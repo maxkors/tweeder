@@ -8,6 +8,12 @@ export type Profile = {
   isFollowed: boolean;
 };
 
+export type SimpleProfile = {
+  id: number;
+  name: string;
+  username: string;
+};
+
 export async function getProfile(username: string) {
   const response = await axios.get(`http://localhost:8081/api/users/${username}`, {
     headers: {
@@ -16,6 +22,16 @@ export async function getProfile(username: string) {
     withCredentials: true,
   });
   return response.data as Profile;
+}
+
+async function searchProfiles(username: string) {
+  const response = await axios.get(`http://localhost:8081/api/users/search?name=${username}`, {
+    headers: {
+      Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+    },
+    withCredentials: true,
+  });
+  return response;
 }
 
 export async function signIn(username: string, password: string) {
@@ -79,5 +95,6 @@ async function unfollow(subjectUsername: string) {
 
 export default {
   follow,
-  unfollow
+  unfollow,
+  searchProfiles
 }
