@@ -12,7 +12,6 @@ function SimpleProfileCard({ profile }: Props) {
   const router = useRouter();
 
   const onCardClickHandler = () => {
-    console.log(`/users/${profile.username}`);
     router.push(`/users/${profile.username}`);
   };
 

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { BASE_PATH } from "./paths";
 
 export type User = {
   id: number;
@@ -58,7 +59,7 @@ const getConfigWithToken = () => ({
 
 export async function getAllTweets() {
   const response = await axios.get(
-    "http://localhost:8081/api/tweets/feed",
+    `${BASE_PATH}/tweets/feed`,
     getConfigWithToken()
   );
   return response.data;
@@ -66,7 +67,7 @@ export async function getAllTweets() {
 
 export async function getTweetById(id: number) {
   const response = await axios.get(
-    `http://localhost:8081/api/tweets/${id}`,
+    `${BASE_PATH}/tweets/${id}`,
     getConfigWithToken()
   );
   return response.data;
@@ -74,7 +75,7 @@ export async function getTweetById(id: number) {
 
 export async function deletePostById(id: number) {
   const response = await axios.delete(
-    `http://localhost:8081/api/tweets/${id}`,
+    `${BASE_PATH}/tweets/${id}`,
     getConfigWithToken()
   );
   return response;
@@ -82,7 +83,7 @@ export async function deletePostById(id: number) {
 
 export async function getPostsByUsername(username: string) {
   const response = await axios.get(
-    `http://localhost:8081/api/tweets/users/${username}`,
+    `${BASE_PATH}/tweets/users/${username}`,
     getConfigWithToken()
   );
   return response.data;
@@ -90,7 +91,7 @@ export async function getPostsByUsername(username: string) {
 
 export async function getLikedPosts(username: string) {
   const response = await axios.get(
-    `http://localhost:8081/api/tweets/users/${username}/liked`,
+    `${BASE_PATH}/tweets/users/${username}/liked`,
     getConfigWithToken()
   );
   return response.data;
@@ -98,7 +99,7 @@ export async function getLikedPosts(username: string) {
 
 export async function createPost(text: string, media: Media[], parentPostId?: number) {
   const response = await axios.post(
-    `http://localhost:8081/api/tweets`,
+    `${BASE_PATH}/tweets`,
     {
       text,
       media,
@@ -111,7 +112,7 @@ export async function createPost(text: string, media: Media[], parentPostId?: nu
 
 export async function addLikeToPost(id: number) {
   const response = await axios.post(
-    `http://localhost:8081/api/tweets/${id}/like`,
+    `${BASE_PATH}/tweets/${id}/like`,
     null,
     getConfigWithToken()
   );
@@ -120,7 +121,7 @@ export async function addLikeToPost(id: number) {
 
 export async function removeLikeFromPost(id: number) {
   const response = await axios.delete(
-    `http://localhost:8081/api/tweets/${id}/like`,
+    `${BASE_PATH}/tweets/${id}/like`,
     getConfigWithToken()
   );
   return response;
@@ -128,7 +129,7 @@ export async function removeLikeFromPost(id: number) {
 
 export async function addPostToBookmarks(id: number) {
   const response = await axios.post(
-    `http://localhost:8081/api/tweets/${id}/bookmark`,
+    `${BASE_PATH}/tweets/${id}/bookmark`,
     null,
     getConfigWithToken()
   );
@@ -137,7 +138,7 @@ export async function addPostToBookmarks(id: number) {
 
 export async function removePostFromBookmarks(id: number) {
   const response = await axios.delete(
-    `http://localhost:8081/api/tweets/${id}/bookmark`,
+    `${BASE_PATH}/tweets/${id}/bookmark`,
     getConfigWithToken()
   );
   return response;
@@ -145,7 +146,7 @@ export async function removePostFromBookmarks(id: number) {
 
 export async function getBookmarkedPosts() {
   const response = await axios.get(
-    `http://localhost:8081/api/tweets/bookmarked`,
+    `${BASE_PATH}/tweets/bookmarked`,
     getConfigWithToken()
   );
   return response;

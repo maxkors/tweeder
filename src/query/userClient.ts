@@ -1,4 +1,5 @@
 import axios from "axios";
+import { BASE_PATH } from "./paths";
 
 export type Profile = {
   name: string;
@@ -15,7 +16,7 @@ export type SimpleProfile = {
 };
 
 export async function getProfile(username: string) {
-  const response = await axios.get(`http://localhost:8081/api/users/${username}`, {
+  const response = await axios.get(`${BASE_PATH}/users/${username}`, {
     headers: {
       Authentication: "Bearer " + localStorage.getItem("jwt_token"),
     },
@@ -25,7 +26,7 @@ export async function getProfile(username: string) {
 }
 
 async function searchProfiles(username: string) {
-  const response = await axios.get(`http://localhost:8081/api/users/search?name=${username}`, {
+  const response = await axios.get(`${BASE_PATH}/users/search?name=${username}`, {
     headers: {
       Authentication: "Bearer " + localStorage.getItem("jwt_token"),
     },
@@ -36,7 +37,7 @@ async function searchProfiles(username: string) {
 
 export async function signIn(username: string, password: string) {
   const response = await axios.post(
-    "http://localhost:8081/api/auth/signin",
+    `${BASE_PATH}/auth/signin`,
     {
       username,
       password,
@@ -51,7 +52,7 @@ export async function signIn(username: string, password: string) {
 
 export async function signUp(name: string, email: string, username: string, password: string) {
   const response = await axios.post(
-    "http://localhost:8081/api/auth/signup",
+    `${BASE_PATH}/auth/signup`,
     {
       username,
       password,
@@ -66,7 +67,7 @@ export async function signUp(name: string, email: string, username: string, pass
 
 async function follow(subjectUsername: string) {
   const response = await axios.post(
-    `http://localhost:8081/api/users/${subjectUsername}/follow`,
+    `${BASE_PATH}/users/${subjectUsername}/follow`,
     null,
     {
       headers: {
@@ -81,7 +82,7 @@ async function follow(subjectUsername: string) {
 
 async function unfollow(subjectUsername: string) {
   const response = await axios.delete(
-    `http://localhost:8081/api/users/${subjectUsername}/follow`,
+    `${BASE_PATH}/users/${subjectUsername}/follow`,
     {
       headers: {
         Authentication: "Bearer " + localStorage.getItem("jwt_token"),
