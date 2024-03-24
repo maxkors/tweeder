@@ -38,7 +38,6 @@ const MessagesPage = () => {
       destination: "/app/chat/sendMessage",
       body: JSON.stringify({
         content: message,
-        sender: username,
         type: "CHAT",
       }),
     });
@@ -52,9 +51,12 @@ const MessagesPage = () => {
     //   });
     stompClient = new Client({
       brokerURL: "ws://localhost:8081/ws",
+      connectHeaders: {
+        Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+      },
       onConnect: () => {
         console.log("connected");
-        stompClient.subscribe("/topic/public", (message) => {
+        stompClient.subscribe("/user/topic/public", (message) => {
           console.log(`Received: ${message.body}`);
           setMessages((prev) => prev.concat(message.body));
         });
