@@ -40,7 +40,7 @@ const TweetPage = ({ params }: Props) => {
       setTweetData(data);
       setChildren(data.children);
     });
-  }, []);
+  }, [params.id]);
 
   const onSubmitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -83,7 +83,7 @@ const TweetPage = ({ params }: Props) => {
 
   const onMainTweetDeletionHandler = useCallback((id: number) => {
     router.replace("/home");
-  }, []);
+  }, [router]);
 
   return (
     <div className="flex justify-center">

@@ -9,6 +9,7 @@ import LikedPostsTab from "./LikedPostsTab";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useState } from "react";
+import Link from "next/link";
 
 type Props = {
   data: Profile;
@@ -56,12 +57,17 @@ const ProfileCard = ({ data }: Props) => {
           <b>{data.subscribersCount}</b> Followers
         </span>
       </p>
-      {data.username === username && (
-        <Button className="mt-3 mx-2" onClick={onSignOutClickHandler}>
-          Sign out
-        </Button>
-      )}
-      {data.username !== username && followButton}
+      <div className="flex">
+        {data.username === username && (
+          <Button className="mt-3 mx-2" onClick={onSignOutClickHandler}>
+            Sign out
+          </Button>
+        )}
+        {data.username !== username && followButton}
+        <Link href={`/messages/?username=${data.username}`} className="flex">
+          <Button className="mt-3 mx-2">Message</Button>
+        </Link>
+      </div>
       <Tabs defaultValue="posts" className="mt-2 w-[100%]">
         <TabsList className="mx-2" style={{ width: "calc(100% - 1rem)" }}>
           <TabsTrigger value="posts" className="w-[50%]">

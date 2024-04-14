@@ -17,21 +17,21 @@ export default function StoreProvider({
   if (!storeRef.current) {
     storeRef.current = makeStore();
 
-    let token = null;
+    // let token = null;
 
-    if (process.browser) {
-      console.log(localStorage);
-      token = localStorage.getItem("jwt_token");
+    // if (process.browser) {
+    //   console.log(localStorage);
+    //   token = localStorage.getItem("jwt_token");
 
-      if (token) {
-        const tokenPayload = JSON.parse(atob(token.split(".")[1]));
-        storeRef.current.dispatch(
-          setProfile({ username: tokenPayload.sub, isAuthenticated: true })
-        );
-      } else {
-        router.push("/");
-      }
-    }
+    //   if (token) {
+    //     const tokenPayload = JSON.parse(atob(token.split(".")[1]));
+    //     storeRef.current.dispatch(
+    //       setProfile({ username: tokenPayload.sub, isAuthenticated: true })
+    //     );
+    //   } else {
+    //     router.push("/");
+    //   }
+    // }
   }
 
   return <Provider store={storeRef.current}>{children}</Provider>;

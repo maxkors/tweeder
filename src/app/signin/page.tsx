@@ -56,7 +56,7 @@ const SignIn = () => {
           </Button>
         </form>
         <p className="font-bold mt-3">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/signup" className="underline">
             Sign up
           </Link>

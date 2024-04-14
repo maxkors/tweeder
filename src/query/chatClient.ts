@@ -31,6 +31,17 @@ async function getAllUsersChats() {
   return response.data;
 }
 
+async function createChat(username: string) {
+  const response = await axios.post(
+    `${BASE_PATH}/chats`,
+    {
+      username,
+    },
+    getConfigWithToken()
+  );
+  return response.data as ChatWithParticipantsData;
+}
+
 async function getAllChatMessages(chatId: number) {
   const response = await axios.get(
     `${BASE_PATH}/chats/${chatId}/messages`,
@@ -42,4 +53,5 @@ async function getAllChatMessages(chatId: number) {
 export default {
   getAllUsersChats,
   getAllChatMessages,
+  createChat,
 };

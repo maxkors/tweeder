@@ -55,7 +55,7 @@ const Sidebar = () => {
         >
           <div>
             {profiles.map((profile) => (
-              <SimpleProfileCard profile={profile} />
+              <SimpleProfileCard profile={profile} key={profile.id} />
             ))}
           </div>
         </ScrollArea>

@@ -11,10 +11,12 @@ import {
 import { RootState } from "@/store/store";
 import StompJs, { Client } from "@stomp/stompjs";
 
-import { FormEvent, SyntheticEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, SyntheticEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import SockJS from "sockjs-client";
 import ChatClient from "../../query/chatClient";
+import { useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 let stompClient: Client;
 
@@ -25,6 +27,7 @@ let stompClient: Client;
 // };
 
 const MessagesPage = () => {
+  const searchParams = useSearchParams();
   const username = useSelector((state: RootState) => state.profile.username);
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [chats, setChats] = useState<ChatWithParticipantsData[]>([]);
@@ -70,6 +73,48 @@ const MessagesPage = () => {
     });
   };
 
+  const filterChats = (chats: ChatWithParticipantsData[], username: string) => {
+    console.log("filtering with: " + username)
+    console.log(chats)
+    chats.forEach((c) => {
+      console.log(c.participants)
+      if (c.participants.length === 2) {
+        const participant = c.participants.find((p) => p.username === username);
+        console.log("participant: " + participant)
+        if (participant) {
+          setCurrentChatId(c.id);
+          ChatClient.getAllChatMessages(c.id).then((messages) => {
+            console.log(messages);
+            setMessages(messages);
+          });
+        } else {
+          ChatClient.createChat(username).then(chat => {
+            console.log("CREATING NEW CHAT")
+            setChats((prev) => prev.concat(chat));
+            setCurrentChatId(chat.id);
+          });
+        }
+      }
+    });
+  };
+
+  const checkUsernameParam = useCallback((c: any) => {
+    const usernameParam = searchParams.get("username");
+    if (usernameParam) {
+      filterChats(c, usernameParam);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log("MOUNT")
+    ChatClient.getAllUsersChats().then((chats) => {
+      setChats(chats);
+      // shitcode, rewrite later
+      checkUsernameParam(chats);
+    });
+    
+  }, [checkUsernameParam]);
+
   useEffect(() => {
     // stompClient.current.onConnect = () => {
     //   stompClient.current.subscribe("/topic/greetings", (greeting) => {
@@ -108,8 +153,6 @@ const MessagesPage = () => {
 
     stompClient.activate();
 
-    ChatClient.getAllUsersChats().then((chats) => setChats(chats));
-
     return () => {
       stompClient.deactivate();
     };
@@ -126,7 +169,10 @@ const MessagesPage = () => {
           <div>
             {chats.map((chat) => (
               <p
-                className="p-2 border-2 border-gray-200 cursor-pointer"
+                className={cn(
+                  "p-2 border-2 border-gray-200 cursor-pointer",
+                  chat.id === currentChatId && "bg-gray-200"
+                )}
                 key={chat.id}
                 data-id={chat.id}
                 onClick={onChatClickHandler}

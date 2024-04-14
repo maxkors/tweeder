@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { ChildrenData } from "@/query/tweetClient";
+import { ChildData } from "@/query/tweetClient";
 
 type Props = {
-  data?: ChildrenData;
+  data?: ChildData;
 };
 
 const Comment = ({ data }: Props) => {

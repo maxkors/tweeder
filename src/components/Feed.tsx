@@ -16,10 +16,12 @@ const Feed = () => {
 
   const [tweets, setTweets] = useState<TweetData[]>(tweetsData);
 
-  if (isError) {
-    localStorage.removeItem("jwt_token");
-    router.push("/signin");
-  }
+  useEffect(() => {
+    if (isError) {
+      localStorage.removeItem("jwt_token");
+      router.push("/signin");
+    }
+  }, []);
 
   useEffect(() => setTweets(tweetsData), [tweetsData])
 
