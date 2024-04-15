@@ -11,7 +11,14 @@ import {
 import { RootState } from "@/store/store";
 import StompJs, { Client } from "@stomp/stompjs";
 
-import { FormEvent, SyntheticEvent, useCallback, useEffect, useRef, useState } from "react";
+import {
+  FormEvent,
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 import SockJS from "sockjs-client";
 import ChatClient from "../../query/chatClient";
@@ -32,6 +39,9 @@ const MessagesPage = () => {
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [chats, setChats] = useState<ChatWithParticipantsData[]>([]);
   const [currentChatId, setCurrentChatId] = useState<number>(0);
+  // used for "stompClient" immutable "onConnect" callback
+  const currentChatIdRef = useRef<number>(0);
+  const [inputValue, setInputValue] = useState<string>("");
   // const stompClient = useRef(
   //   new StompJs.Client({
   //     brokerURL: "ws://localhost:8081/gs-guide-websocket",
@@ -41,32 +51,31 @@ const MessagesPage = () => {
   const onFormSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-
     // const chatId = formData.get("chatId")?.toString();
     // if (!chatId || chatId.length < 1) return;
 
     // const invitedUsername = formData.get("invitedUsername")?.toString();
     // if (!invitedUsername || invitedUsername.length < 1) return;
 
-    const content = formData.get("content")?.toString();
-    if (!content || content.length < 1) return;
+    if (inputValue.length < 1) return;
 
-    console.log("trying to send: " + content);
+    console.log("trying to send: " + inputValue);
     stompClient.publish({
       destination: "/app/chat/sendMessage",
       body: JSON.stringify({
         chatId: currentChatId,
         invitedUsername: null,
-        content: content,
+        content: inputValue,
       }),
     });
+    setInputValue("");
   };
 
   const onChatClickHandler = (event: SyntheticEvent<HTMLElement>) => {
     const chatId = Number(event.currentTarget.dataset.id);
     console.log("currentChatId: " + chatId);
     setCurrentChatId(chatId);
+    currentChatIdRef.current = chatId;
     ChatClient.getAllChatMessages(chatId).then((messages) => {
       console.log(messages);
       setMessages(messages);
@@ -74,45 +83,65 @@ const MessagesPage = () => {
   };
 
   const filterChats = (chats: ChatWithParticipantsData[], username: string) => {
-    console.log("filtering with: " + username)
-    console.log(chats)
-    chats.forEach((c) => {
-      console.log(c.participants)
-      if (c.participants.length === 2) {
-        const participant = c.participants.find((p) => p.username === username);
-        console.log("participant: " + participant)
-        if (participant) {
-          setCurrentChatId(c.id);
-          ChatClient.getAllChatMessages(c.id).then((messages) => {
-            console.log(messages);
-            setMessages(messages);
-          });
-        } else {
-          ChatClient.createChat(username).then(chat => {
-            console.log("CREATING NEW CHAT")
-            setChats((prev) => prev.concat(chat));
-            setCurrentChatId(chat.id);
-          });
-        }
-      }
-    });
+    console.log("filtering with: " + username);
+    console.log(chats);
+    
+    // chats.forEach((c) => {
+    //   console.log(c.participants);
+    //   if (c.participants.length === 2) {
+    //     const participant = c.participants.find((p) => p.username === username);
+    //     console.log("participant: " + participant);
+    //     if (participant) {
+    //       setCurrentChatId(c.id);
+    //       currentChatIdRef.current = c.id;
+    //       ChatClient.getAllChatMessages(c.id).then((messages) => {
+    //         console.log(messages);
+    //         setMessages(messages);
+    //       });
+    //     } else {
+    //       ChatClient.createChat(username).then((chat) => {
+    //         console.log("CREATING NEW CHAT");
+    //         setChats((prev) => prev.concat(chat));
+    //         setCurrentChatId(chat.id);
+    //         currentChatIdRef.current = chat.id;
+    //       });
+    //     }
+    //   }
+    // });
+
+    const chat = chats.find(c => c.participants.find((p) => p.username === username));
+    if (chat) {
+      setCurrentChatId(chat.id);
+      currentChatIdRef.current = chat.id;
+      ChatClient.getAllChatMessages(chat.id).then((messages) => {
+        console.log(messages);
+        setMessages(messages);
+      });
+    } else {
+      ChatClient.createChat(username).then((chat) => {
+        console.log("CREATING NEW CHAT");
+        setChats((prev) => prev.concat(chat));
+        setCurrentChatId(chat.id);
+        currentChatIdRef.current = chat.id;
+      });
+    }
   };
 
   const checkUsernameParam = useCallback((c: any) => {
     const usernameParam = searchParams.get("username");
+    console.log("username param: " + usernameParam);
     if (usernameParam) {
       filterChats(c, usernameParam);
     }
   }, []);
 
   useEffect(() => {
-    console.log("MOUNT")
+    console.log("MOUNT");
     ChatClient.getAllUsersChats().then((chats) => {
       setChats(chats);
       // shitcode, rewrite later
       checkUsernameParam(chats);
     });
-    
   }, [checkUsernameParam]);
 
   useEffect(() => {
@@ -133,8 +162,8 @@ const MessagesPage = () => {
           const chatMessage: MessageData = JSON.parse(message.body);
           console.log(chatMessage);
           console.log(chatMessage.chat.id);
-          console.log(currentChatId);
-          if (chatMessage.chat.id === currentChatId) {
+          console.log(currentChatIdRef.current);
+          if (chatMessage.chat.id === currentChatIdRef.current) {
             setMessages((prev) => prev.concat(chatMessage));
           }
         });
@@ -156,7 +185,7 @@ const MessagesPage = () => {
     return () => {
       stompClient.deactivate();
     };
-  }, [currentChatId]);
+  }, []);
 
   return (
     <div className="flex justify-center">
@@ -185,27 +214,33 @@ const MessagesPage = () => {
             ))}
           </div>
         </aside>
-        <main className="relative flex-grow">
-          {messages.map((message) => (
-            <p
-              className="p-2 border-2 border-gray-200 cursor-pointer"
-              key={message.id}
-            >
-              <span>{message.sender.username}:</span>
-              <span className="ml-2">{message.text}</span>
-            </p>
-          ))}
-          <div className="absolute bottom-0 w-full">
-            <form onSubmit={onFormSubmitHandler} className="flex p-4">
-              <Input
-                type="text"
-                name="content"
-                className="mr-4 flex-grow"
-                placeholder="content"
-              />
-              <Button type="submit">Send</Button>
-            </form>
-          </div>
+        <main className="flex-grow">
+          {currentChatId > 0 && (
+            <div className="relative h-full">
+              {messages.map((message) => (
+                <p
+                  className="p-2 border-2 border-gray-200 cursor-pointer"
+                  key={message.id}
+                >
+                  <span>{message.sender.username}:</span>
+                  <span className="ml-2">{message.text}</span>
+                </p>
+              ))}
+              <div className="absolute bottom-0 w-full">
+                <form onSubmit={onFormSubmitHandler} className="flex p-4">
+                  <Input
+                    type="text"
+                    name="content"
+                    className="mr-4 flex-grow"
+                    placeholder="content"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                  />
+                  <Button type="submit">Send</Button>
+                </form>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>
