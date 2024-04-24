@@ -19,6 +19,7 @@ const ProfileCard = ({ data }: Props) => {
   const router = useRouter();
   const username = useSelector((state: RootState) => state.profile.username);
   const [isFollowed, setIsFollowed] = useState<boolean>(data.isFollowed);
+  const [followersCounter, setFollowersCounter] = useState<number>(data.subscribersCount);
 
   const onSignOutClickHandler = () => {
     localStorage.removeItem("jwt_token");
@@ -28,11 +29,13 @@ const ProfileCard = ({ data }: Props) => {
   const onFollowClickHandler = () => {
     UserClient.follow(data.username);
     setIsFollowed(true);
+    setFollowersCounter(prev => prev + 1);
   };
 
   const onUnfollowClickHandler = () => {
     UserClient.unfollow(data.username);
     setIsFollowed(false);
+    setFollowersCounter(prev => prev - 1);
   };
 
   const followButton = isFollowed ? (
@@ -54,7 +57,7 @@ const ProfileCard = ({ data }: Props) => {
           <b>{data.subscriptionsCount}</b> Following
         </span>
         <span>
-          <b>{data.subscribersCount}</b> Followers
+          <b>{followersCounter}</b> Followers
         </span>
       </p>
       <div className="flex">

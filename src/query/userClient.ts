@@ -54,6 +54,8 @@ export async function signUp(name: string, email: string, username: string, pass
   const response = await axios.post(
     `${BASE_PATH}/auth/signup`,
     {
+      name,
+      email,
       username,
       password,
     },

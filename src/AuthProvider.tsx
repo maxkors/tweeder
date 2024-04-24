@@ -11,7 +11,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // if (process.browser) {
-      console.log(localStorage);
+      // console.log(localStorage);
       let token = localStorage.getItem("jwt_token");
   
       if (token) {

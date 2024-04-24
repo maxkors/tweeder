@@ -21,6 +21,8 @@ const SignUp = () => {
     if (!name || !email || !username || !password) return;
     if (name.length < 3 || email.length < 10 || username.length < 3 || password.length < 5) return;
 
+    console.log(`${name} ${email} ${username} ${password}`);
+
     const response = await signUp(name, email, username, password);
 
     if (response.status === 200) {
