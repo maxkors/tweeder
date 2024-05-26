@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BASE_PATH } from "./paths";
+import { MediaData } from "./storageClient";
 
 export type User = {
   id: number;
@@ -57,11 +58,20 @@ const getConfigWithToken = () => ({
   withCredentials: true,
 });
 
+const getMultipartConfigWithToken = () => ({
+  headers: {
+    Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+    'Content-Type': 'multipart/form-data'
+  },
+  withCredentials: true,
+});
+
 export async function getAllTweets() {
   const response = await axios.get(
     `${BASE_PATH}/tweets/feed`,
     getConfigWithToken()
   );
+  console.log(response.data);
   return response.data;
 }
 
@@ -97,7 +107,7 @@ export async function getLikedPosts(username: string) {
   return response.data;
 }
 
-export async function createPost(text: string, media: Media[], parentPostId?: number) {
+export async function createPost(text: string, media: any, parentPostId?: number) {
   const response = await axios.post(
     `${BASE_PATH}/tweets`,
     {
@@ -105,7 +115,16 @@ export async function createPost(text: string, media: Media[], parentPostId?: nu
       media,
       parentPostId: parentPostId || null,
     },
-    getConfigWithToken()
+    getMultipartConfigWithToken()
+  );
+  return response;
+}
+
+export async function createPost2(formData: FormData) {
+  const response = await axios.post(
+    `${BASE_PATH}/tweets`,
+    formData,
+    getMultipartConfigWithToken()
   );
   return response;
 }

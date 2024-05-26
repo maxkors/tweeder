@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { AiOutlineHome } from "react-icons/ai";
-import { BsPerson, BsEnvelope } from "react-icons/bs";
+import { BsPerson, BsEnvelope, BsFeather } from "react-icons/bs";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { Button } from "./ui/button";
 import {
@@ -13,11 +13,13 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Textarea } from "./ui/textarea";
-import { FormEvent, useState } from "react";
-import { createPost, getAllTweets } from "@/query/tweetClient";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { createPost, createPost2, getAllTweets } from "@/query/tweetClient";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { Input } from "./ui/input";
+import { MediaData } from "@/query/storageClient";
 
 const Navigation = () => {
   const { refetch } = useQuery({
@@ -31,11 +33,30 @@ const Navigation = () => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
-    const content = formData.get("content")?.toString();
+    const text = formData.get("text")?.toString();
+    const file = formData.get("media");
 
-    if (!content || content.length < 1) return;
+    console.log(formData);
 
-    const response = await createPost(content, []);
+    // let mediaData = [];
+
+    // if (file) {
+    //   console.log("MEDIA: ");
+    //   console.log(file);
+    //   console.log(file.name);
+
+    //   mediaData.push({
+    //     name: file.name,
+    //     type: file.type
+    //   });
+    // }
+
+    if (!text || text.length < 1) return;
+
+    // formData.append()
+
+    const response = await createPost(text, file);
+    // const response = await createPost2(formData);
 
     if (response.status === 200) {
       refetch();
@@ -43,8 +64,12 @@ const Navigation = () => {
     }
   };
 
+  const onMediaChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.files);
+  };
+
   return (
-    <nav className="fixed bottom-0 w-[100%] border-t-[1px] border-gray-300 p-2 md:px-4 md:static md:w-auto md:border-none">
+    <nav className="fixed bottom-0 w-[100%] border-t-[1px] border-gray-300 p-2 md:px-4 md:static md:w-auto md:border-none bg-white">
       <ul className="flex justify-around md:justify-normal md:block">
         <li className="md:mb-4">
           <Link href="/home" className="flex">
@@ -70,17 +95,18 @@ const Navigation = () => {
             <span className="hidden lg:inline">Profile</span>
           </Link>
         </li>
-        <li>
+        <li className="fixed right-6 bottom-14 md:block md:right-auto md:bottom-auto md:static">
           <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button
-                className="w-full font-bold"
+                className="w-14 h-14 font-bold rounded-full lg:rounded-2xl lg:h-10 lg:w-full"
                 onClick={() => setDialogOpen(true)}
               >
-                Post
+                <BsFeather className="h-6 w-6 lg:mr-3 text-white lg:hidden" />
+                <p className="hidden lg:block">Post</p>
               </Button>
             </DialogTrigger>
-            <DialogContent className="top-[20vh]">
+            <DialogContent className="top-[20vh] m-20">
               <DialogHeader>
                 <DialogTitle>Write your post</DialogTitle>
               </DialogHeader>
@@ -88,10 +114,18 @@ const Navigation = () => {
                 className="border-b-[1px] border-gray-200 p-2"
                 onSubmit={onSubmitHandler}
               >
-                <Textarea name="content" className="resize-none mb-3" />
-                <Button className="w-20" type="submit">
-                  Post
-                </Button>
+                <Textarea name="text" className="resize-none mb-3" />
+                <div className="flex gap-2">
+                  <Button className="w-20" type="submit">
+                    Post
+                  </Button>
+                  <Input
+                    name="media"
+                    type="file"
+                    className="max-w-56"
+                    onChange={onMediaChangeHandler}
+                  />
+                </div>
               </form>
             </DialogContent>
           </Dialog>

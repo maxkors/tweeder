@@ -32,7 +32,7 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="p-2">
+    <aside className="p-2 hidden md:block">
       <section className="relative">
         <Input
           name="search"

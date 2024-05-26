@@ -170,9 +170,10 @@ const Tweet = ({ tweetData, detailed, onDeletionHandler, onBookmarkRemovalHandle
               key={id}
               style={{ height: mediaHeightClass(), width: mediaWidthClass() }}
             >
-              {media.type === "image" && (
+              {media.type === "image/jpeg" && (
                 <img
-                  src={`http://localhost/images/${media?.urn}`}
+                  // src={`http://localhost/images/${media?.uri}`}
+                  src={media?.urn}
                   alt=""
                   className={`object-cover object-center h-[100%] w-[100%]`}
                 />

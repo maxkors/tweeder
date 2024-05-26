@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 const Feed = () => {
   const router = useRouter();
 
-  const { data: tweetsData, isLoading, isError } = useQuery({
+  const { data: tweetsData, isLoading, isSuccess } = useQuery({
     queryKey: ["tweets"],
     queryFn: getAllTweets,
   });
@@ -17,7 +17,8 @@ const Feed = () => {
   const [tweets, setTweets] = useState<TweetData[]>(tweetsData);
 
   useEffect(() => {
-    if (isError) {
+    console.log("IS SUCCESS: " + isSuccess);
+    if (!isSuccess && !isLoading) {
       localStorage.removeItem("jwt_token");
       router.push("/signin");
     }
