@@ -11,7 +11,7 @@ type Props = {
   };
 };
 
-const Profile = ({ params }: Props) => {
+const ProfilePage = ({ params }: Props) => {
   const [profile, setProfile] = useState<Profile>();
 
   useEffect(() => {
@@ -30,4 +30,4 @@ const Profile = ({ params }: Props) => {
   );
 };
 
-export default Profile;
+export default ProfilePage;

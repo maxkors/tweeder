@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { AiOutlineHome } from "react-icons/ai";
 import { BsPerson, BsEnvelope, BsFeather } from "react-icons/bs";
-import { IoBookmarkOutline } from "react-icons/io5";
+import { IoBookmarkOutline, IoSearchOutline } from "react-icons/io5";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -75,6 +75,11 @@ const Navigation = () => {
           <Link href="/home" className="flex">
             <AiOutlineHome className="h-6 w-6 md:mr-3" />
             <span className="hidden lg:inline">Home</span>
+          </Link>
+        </li>
+        <li className="md:hidden">
+          <Link href="/search" className="flex">
+            <IoSearchOutline className="h-6 w-6 md:mr-3" />
           </Link>
         </li>
         <li className="md:mb-4">

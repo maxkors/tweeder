@@ -19,7 +19,9 @@ const ProfileCard = ({ data }: Props) => {
   const router = useRouter();
   const username = useSelector((state: RootState) => state.profile.username);
   const [isFollowed, setIsFollowed] = useState<boolean>(data.isFollowed);
-  const [followersCounter, setFollowersCounter] = useState<number>(data.subscribersCount);
+  const [followersCounter, setFollowersCounter] = useState<number>(
+    data.subscribersCount
+  );
 
   const onSignOutClickHandler = () => {
     localStorage.removeItem("jwt_token");
@@ -29,13 +31,13 @@ const ProfileCard = ({ data }: Props) => {
   const onFollowClickHandler = () => {
     UserClient.follow(data.username);
     setIsFollowed(true);
-    setFollowersCounter(prev => prev + 1);
+    setFollowersCounter((prev) => prev + 1);
   };
 
   const onUnfollowClickHandler = () => {
     UserClient.unfollow(data.username);
     setIsFollowed(false);
-    setFollowersCounter(prev => prev - 1);
+    setFollowersCounter((prev) => prev - 1);
   };
 
   const followButton = isFollowed ? (
@@ -46,6 +48,12 @@ const ProfileCard = ({ data }: Props) => {
     <Button className="mt-3 mx-2" onClick={onFollowClickHandler}>
       Follow
     </Button>
+  );
+
+  const messageButton = (
+    <Link href={`/messages/?username=${data.username}`} className="flex">
+      <Button className="mt-3 mx-2">Message</Button>
+    </Link>
   );
 
   return (
@@ -67,9 +75,7 @@ const ProfileCard = ({ data }: Props) => {
           </Button>
         )}
         {data.username !== username && followButton}
-        <Link href={`/messages/?username=${data.username}`} className="flex">
-          <Button className="mt-3 mx-2">Message</Button>
-        </Link>
+        {data.username !== username && messageButton}
       </div>
       <Tabs defaultValue="posts" className="mt-2 w-[100%]">
         <TabsList className="mx-2" style={{ width: "calc(100% - 1rem)" }}>
