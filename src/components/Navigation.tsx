@@ -83,7 +83,7 @@ const Navigation = () => {
           </Link>
         </li>
         <li className="md:mb-4">
-          <Link href="/messages" className="flex">
+          <Link href="/chats" className="flex">
             <BsEnvelope className="h-6 w-6 md:mr-3" />
             <span className="hidden lg:inline">Messages</span>
           </Link>

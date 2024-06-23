@@ -18,6 +18,7 @@ const Feed = () => {
 
   useEffect(() => {
     console.log("IS SUCCESS: " + isSuccess);
+    console.log("IS SUCCESS: " + isLoading);
     if (!isSuccess && !isLoading) {
       localStorage.removeItem("jwt_token");
       router.push("/signin");
