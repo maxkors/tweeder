@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function ChatsPage() {
-  return (
-    <div>ChatsPage</div>
-  )
+  return <div className="hidden md:block">ChatsPage</div>;
 }
 
-export default ChatsPage
+export default ChatsPage;

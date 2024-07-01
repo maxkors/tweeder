@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Input } from "./ui/input";
 import { MediaData } from "@/query/storageClient";
+import { usePathname } from "next/navigation";
 
 const Navigation = () => {
   const { refetch } = useQuery({
@@ -28,6 +29,7 @@ const Navigation = () => {
   });
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
   const username = useSelector((state: RootState) => state.profile.username);
+  const pathname = usePathname();
 
   const onSubmitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
