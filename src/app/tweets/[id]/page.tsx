@@ -14,6 +14,7 @@ import {
   getTweetById,
 } from "@/query/tweetClient";
 import {
+  ChangeEvent,
   FormEvent,
   SyntheticEvent,
   useCallback,
@@ -22,6 +23,7 @@ import {
   useState,
 } from "react";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 
 type Props = {
   params: {
@@ -47,10 +49,11 @@ const TweetPage = ({ params }: Props) => {
     const formData = new FormData(event.currentTarget);
 
     const text = formData.get("text")?.toString();
+    const media = formData.get("media");
 
     if (!text || text.length < 1) return;
 
-    const response = await createPost(text, [], Number(params.id));
+    const response = await createPost(text, media, Number(params.id));
 
     if (response.status === 200) {
       //@ts-ignore
@@ -69,6 +72,10 @@ const TweetPage = ({ params }: Props) => {
 
   const onBackArrowClick = (event: SyntheticEvent<HTMLElement>) => {
     router.back();
+  };
+  
+  const onMediaChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.files);
   };
 
   const onTweetDeletionHandler = useCallback((id: number) => {
@@ -114,9 +121,17 @@ const TweetPage = ({ params }: Props) => {
             placeholder="Post your comment"
             ref={textAreaRef}
           />
-          <Button className="" type="submit">
-            Reply
-          </Button>
+          <div className="flex gap-2">
+                  <Button className="w-20" type="submit">
+                    Reply
+                  </Button>
+                  <Input
+                    name="media"
+                    type="file"
+                    className="max-w-56"
+                    onChange={onMediaChangeHandler}
+                  />
+                </div>
         </form>
 
         {children.toReversed().map((child, id) => (

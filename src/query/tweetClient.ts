@@ -108,6 +108,7 @@ export async function getLikedPosts(username: string) {
 }
 
 export async function createPost(text: string, media: any, parentPostId?: number) {
+  console.log(text, media, parentPostId);
   const response = await axios.post(
     `${BASE_PATH}/tweets`,
     {

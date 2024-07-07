@@ -38,7 +38,7 @@ const Navigation = () => {
     const text = formData.get("text")?.toString();
     const file = formData.get("media");
 
-    console.log(formData);
+    console.log(file);
 
     // let mediaData = [];
 
