@@ -39,7 +39,7 @@ async function createChat(username: string) {
     },
     getConfigWithToken()
   );
-  return response.data as ChatWithParticipantsData;
+  return response.data as ChatData;
 }
 
 async function getAllChatMessages(chatId: number) {

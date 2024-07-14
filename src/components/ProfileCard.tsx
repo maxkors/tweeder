@@ -1,6 +1,7 @@
 "use client";
 
 import UserClient, { Profile } from "@/query/userClient";
+import ChatClient from "@/query/chatClient";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -50,11 +51,9 @@ const ProfileCard = ({ data }: Props) => {
     </Button>
   );
 
-  const messageButton = (
-    <Link href={`/messages/?username=${data.username}`} className="flex">
-      <Button className="mt-3 mx-2">Message</Button>
-    </Link>
-  );
+  const onMessageButtonClick = () => {
+    ChatClient.createChat(data.username).then(chat => router.push(`/chats/${chat.id}`));
+  };
 
   return (
     <div>
@@ -75,7 +74,7 @@ const ProfileCard = ({ data }: Props) => {
           </Button>
         )}
         {data.username !== username && followButton}
-        {data.username !== username && messageButton}
+        {data.username !== username && <Button className="mt-3 mx-2" onClick={onMessageButtonClick} >Message</Button>}
       </div>
       <Tabs defaultValue="posts" className="mt-2 w-[100%]">
         <TabsList className="mx-2" style={{ width: "calc(100% - 1rem)" }}>

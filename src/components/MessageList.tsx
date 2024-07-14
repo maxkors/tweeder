@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent, SyntheticEvent, useEffect, useState } from "react";
+import React, { FormEvent, SyntheticEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { MessageData } from "@/query/chatClient";
@@ -25,6 +25,7 @@ const MessageList = ({ chatId }: Props) => {
   const [inputValue, setInputValue] = useState<string>("");
   const pathname = usePathname();
   const router = useRouter();
+  const messagesRef = useRef<HTMLParagraphElement>(null);
 
   const onFormSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -61,6 +62,12 @@ const MessageList = ({ chatId }: Props) => {
     });
     console.log("Current route: " + pathname);
   }, []);
+
+  useEffect(() => {
+    if (messagesRef.current) {
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   useEffect(() => {
     // stompClient.current.onConnect = () => {
@@ -123,7 +130,7 @@ const MessageList = ({ chatId }: Props) => {
             }
           </p>
         </header>
-        <div className="flex flex-col text-slate-100 px-2 h-[calc(100vh-6.25rem)] md:h-[calc(100vh-3.5rem)] overflow-auto border-b-[1px] border-gray-200">
+        <div className="flex flex-col text-slate-100 px-2 h-[calc(100vh-6.25rem)] md:h-[calc(100vh-3.5rem)] overflow-auto border-b-[1px] border-gray-200" ref={messagesRef}>
           {messages.map((message) => (
             <p
               className={cn(
