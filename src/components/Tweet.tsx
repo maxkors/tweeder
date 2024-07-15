@@ -39,7 +39,12 @@ type Props = {
   onBookmarkRemovalHandler?: (id: number) => void;
 };
 
-const Tweet = ({ tweetData, detailed, onDeletionHandler, onBookmarkRemovalHandler }: Props) => {
+const Tweet = ({
+  tweetData,
+  detailed,
+  onDeletionHandler,
+  onBookmarkRemovalHandler,
+}: Props) => {
   const router = useRouter();
   const username = useSelector((state: RootState) => state.profile.username);
   const [data, setData] = useState<ChildData | TweetDataWithChildren>(
@@ -108,8 +113,10 @@ const Tweet = ({ tweetData, detailed, onDeletionHandler, onBookmarkRemovalHandle
   };
 
   const copyToClipboardHandler = () => {
-    navigator.clipboard.writeText(`http://localhost:3000/tweets/${tweetData.id}`);
-  }
+    navigator.clipboard.writeText(
+      `http://localhost:3000/tweets/${tweetData.id}`
+    );
+  };
 
   return (
     <article
@@ -178,6 +185,11 @@ const Tweet = ({ tweetData, detailed, onDeletionHandler, onBookmarkRemovalHandle
                   className={`object-cover object-center h-[100%] w-[100%]`}
                 />
               )}
+              {media.type === "video/mp4" && (
+                <video controls>
+                  <source src={media?.urn} type="video/mp4" />
+                </video>
+              )}
             </div>
           ))}
         </div>
@@ -207,7 +219,10 @@ const Tweet = ({ tweetData, detailed, onDeletionHandler, onBookmarkRemovalHandle
           onClick={bookmarkHandler}
         >
           {data.bookmarked ? (
-            <IoBookmark className="h-4 w-4 mr-1" style={{ color: "lightblue" }} />
+            <IoBookmark
+              className="h-4 w-4 mr-1"
+              style={{ color: "lightblue" }}
+            />
           ) : (
             <IoBookmarkOutline className="h-4 w-4" />
           )}
@@ -215,9 +230,7 @@ const Tweet = ({ tweetData, detailed, onDeletionHandler, onBookmarkRemovalHandle
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div
-              className="flex justify-center items-center"
-            >
+            <div className="flex justify-center items-center">
               <FiShare2 className="h-4 w-4" />
             </div>
           </DropdownMenuTrigger>

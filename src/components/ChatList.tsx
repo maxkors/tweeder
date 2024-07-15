@@ -26,7 +26,6 @@ function ChatList() {
     console.log("MOUNT");
     ChatClient.getAllUsersChats().then((chats) => {
       setChats(chats);
-      // shitcode, rewrite later
     });
 
     console.log("Current route: " + pathname);

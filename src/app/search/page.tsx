@@ -36,19 +36,19 @@ const SearchPage = () => {
     <div className="flex justify-center">
       <Navigation />
       <section className="min-h-screen w-[100%] md:w-[37.5rem] md:border-x-[1px] border-gray-300">
-       <div className="p-4">
-       <Input
-          name="search"
-          type="text"
-          placeholder="Search"
-          autoComplete="off"
-          onFocus={onInputFocus}
-          onBlur={onInputBlur}
-          onChange={onInputChange}
-          className="w-full"
-          autoFocus={true}
-        />
-       </div>
+        <div className="p-4">
+          <Input
+            name="search"
+            type="text"
+            placeholder="Search"
+            autoComplete="off"
+            onFocus={onInputFocus}
+            onBlur={onInputBlur}
+            onChange={onInputChange}
+            className="w-full"
+            autoFocus={true}
+          />
+        </div>
         <div>
           {profiles.map((profile) => (
             <SimpleProfileCard profile={profile} key={profile.id} />

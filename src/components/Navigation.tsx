@@ -21,6 +21,7 @@ import { RootState } from "@/store/store";
 import { Input } from "./ui/input";
 import { MediaData } from "@/query/storageClient";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const Navigation = () => {
   const { refetch } = useQuery({
@@ -106,7 +107,8 @@ const Navigation = () => {
           <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button
-                className="w-14 h-14 font-bold rounded-full lg:rounded-2xl lg:h-10 lg:w-full"
+                className={cn("w-14 h-14 font-bold rounded-full lg:rounded-2xl lg:h-10 lg:w-full",
+                  pathname.startsWith("/chats/") && global?.window && window.innerWidth < 768 ? "hidden" : "block" )}
                 onClick={() => setDialogOpen(true)}
               >
                 <BsFeather className="h-6 w-6 lg:mr-3 text-white lg:hidden" />
