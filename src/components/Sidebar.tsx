@@ -5,10 +5,13 @@ import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import UserClient, { SimpleProfile } from "@/query/userClient";
 import SimpleProfileCard from "./SimpleProfileCard";
+import { useRouter } from "next/navigation";
 
 const Sidebar = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [profiles, setProfiles] = useState<SimpleProfile[]>([]);
+  const router = useRouter();
+
 
   const onInputFocus = () => {
     setOpen(true);
@@ -29,6 +32,10 @@ const Sidebar = () => {
     } else {
       setProfiles([]);
     }
+  };
+
+  const onCardClickHandler = (profile: SimpleProfile) => {
+    router.push(`/users/${profile.username}`);
   };
 
   return (
@@ -55,7 +62,7 @@ const Sidebar = () => {
         >
           <div>
             {profiles.map((profile) => (
-              <SimpleProfileCard profile={profile} key={profile.id} />
+              <SimpleProfileCard profile={profile} onClickHandler={onCardClickHandler} key={profile.id} />
             ))}
           </div>
         </ScrollArea>

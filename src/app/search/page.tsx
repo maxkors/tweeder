@@ -5,20 +5,12 @@ import Sidebar from "@/components/Sidebar";
 import SimpleProfileCard from "@/components/SimpleProfileCard";
 import { Input } from "@/components/ui/input";
 import UserClient, { SimpleProfile } from "@/query/userClient";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const SearchPage = () => {
-  const [isOpen, setOpen] = useState<boolean>(false);
   const [profiles, setProfiles] = useState<SimpleProfile[]>([]);
-
-  const onInputFocus = () => {
-    setOpen(true);
-  };
-  const onInputBlur = () => {
-    setTimeout(() => {
-      setOpen(false);
-    }, 200);
-  };
+  const router = useRouter();
 
   const onInputChange = (event: React.FormEvent<HTMLInputElement>) => {
     const inputValue = event.currentTarget.value.trim();
@@ -32,6 +24,10 @@ const SearchPage = () => {
     }
   };
 
+  const onCardClickHandler = (profile: SimpleProfile) => {
+    router.push(`/users/${profile.username}`);
+  };
+
   return (
     <div className="flex justify-center">
       <Navigation />
@@ -42,16 +38,13 @@ const SearchPage = () => {
             type="text"
             placeholder="Search"
             autoComplete="off"
-            onFocus={onInputFocus}
-            onBlur={onInputBlur}
             onChange={onInputChange}
             className="w-full"
-            autoFocus={true}
           />
         </div>
         <div>
           {profiles.map((profile) => (
-            <SimpleProfileCard profile={profile} key={profile.id} />
+            <SimpleProfileCard profile={profile} onClickHandler={onCardClickHandler} key={profile.id} />
           ))}
         </div>
       </section>

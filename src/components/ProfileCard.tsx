@@ -10,7 +10,6 @@ import LikedPostsTab from "./LikedPostsTab";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useState } from "react";
-import Link from "next/link";
 
 type Props = {
   data: Profile;
