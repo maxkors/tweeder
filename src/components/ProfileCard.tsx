@@ -10,6 +10,7 @@ import LikedPostsTab from "./LikedPostsTab";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useState } from "react";
+import Link from "next/link";
 
 type Props = {
   data: Profile;
@@ -51,7 +52,9 @@ const ProfileCard = ({ data }: Props) => {
   );
 
   const onMessageButtonClick = () => {
-    ChatClient.createChat(data.username).then(chat => router.push(`/chats/${chat.id}`));
+    ChatClient.createChat(data.username).then((chat) =>
+      router.push(`/chats/${chat.id}`)
+    );
   };
 
   return (
@@ -59,12 +62,18 @@ const ProfileCard = ({ data }: Props) => {
       <p className="font-bold mx-2">{data.name}</p>
       <p className="text-gray-500 mx-2">@{data.username}</p>
       <p className="mx-2">
-        <span className="mr-3">
+        <Link
+          href={`/users/${data.username}/following`}
+          className="mr-3 hover:underline"
+        >
           <b>{data.subscriptionsCount}</b> Following
-        </span>
-        <span>
+        </Link>
+        <Link
+          href={`/users/${data.username}/followers`}
+          className="hover:underline"
+        >
           <b>{followersCounter}</b> Followers
-        </span>
+        </Link>
       </p>
       <div className="flex">
         {data.username === username && (
@@ -73,7 +82,11 @@ const ProfileCard = ({ data }: Props) => {
           </Button>
         )}
         {data.username !== username && followButton}
-        {data.username !== username && <Button className="mt-3 mx-2" onClick={onMessageButtonClick} >Message</Button>}
+        {data.username !== username && (
+          <Button className="mt-3 mx-2" onClick={onMessageButtonClick}>
+            Message
+          </Button>
+        )}
       </div>
       <Tabs defaultValue="posts" className="mt-2 w-[100%]">
         <TabsList className="mx-2" style={{ width: "calc(100% - 1rem)" }}>

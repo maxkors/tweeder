@@ -96,8 +96,30 @@ async function unfollow(subjectUsername: string) {
   return response;
 }
 
+async function getSubscriptions(username: string) {
+  const response = await axios.get(`${BASE_PATH}/users/${username}/subscriptions`, {
+    headers: {
+      Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+    },
+    withCredentials: true,
+  });
+  return response.data as SimpleProfile[];
+}
+
+async function getSubscribers(username: string) {
+  const response = await axios.get(`${BASE_PATH}/users/${username}/subscribers`, {
+    headers: {
+      Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+    },
+    withCredentials: true,
+  });
+  return response.data as SimpleProfile[];
+}
+
 export default {
   follow,
   unfollow,
-  searchProfiles
+  searchProfiles,
+  getSubscriptions,
+  getSubscribers
 }
