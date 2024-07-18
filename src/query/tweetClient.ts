@@ -75,6 +75,15 @@ export async function getAllTweets() {
   return response.data;
 }
 
+export async function getRecommendedTweets() {
+  const response = await axios.get(
+    `${BASE_PATH}/tweets/recommended`,
+    getConfigWithToken()
+  );
+  console.log(response.data);
+  return response.data;
+}
+
 export async function getTweetById(id: number) {
   const response = await axios.get(
     `${BASE_PATH}/tweets/${id}`,

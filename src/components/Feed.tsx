@@ -1,43 +1,34 @@
 "use client";
 
-import {TweetData, getAllTweets} from "@/query/tweetClient";
+import { TweetData, getAllTweets } from "@/query/tweetClient";
 import { useQuery } from "@tanstack/react-query";
 import Tweet from "./Tweet";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import SubscriptionPosts from "./SubscriptionPosts";
+import RecommendedPosts from "./RecommendedPosts";
 
 const Feed = () => {
-  const router = useRouter();
-
-  const { data: tweetsData, isLoading, isSuccess } = useQuery({
-    queryKey: ["tweets"],
-    queryFn: getAllTweets,
-  });
-
-  const [tweets, setTweets] = useState<TweetData[]>(tweetsData);
-
-  useEffect(() => {
-    console.log("IS SUCCESS: " + isSuccess);
-    console.log("IS SUCCESS: " + isLoading);
-    if (!isSuccess && !isLoading) {
-      localStorage.removeItem("jwt_token");
-      router.push("/signin");
-    }
-  }, []);
-
-  useEffect(() => setTweets(tweetsData), [tweetsData])
-
-  const onTweetDeletionHandler = useCallback((id: number) => {
-    setTweets(prev => prev.filter(t => t.id !== id));
-  }, []);
 
   return (
     <div className="min-h-screen w-[100%] md:w-[37.5rem] md:border-x-[1px] border-gray-300">
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        tweets && tweets.map((t: TweetData) => <Tweet tweetData={t} key={t.id} onDeletionHandler={onTweetDeletionHandler} />)
-      )}
+      <Tabs defaultValue="subscription" className="mt-2 w-[100%]">
+        <TabsList className="mx-2" style={{ width: "calc(100% - 1rem)" }}>
+        <TabsTrigger value="recommended" className="w-[50%]">
+            For you
+          </TabsTrigger>
+          <TabsTrigger value="subscription" className="w-[50%]">
+            Following
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="recommended">
+          <RecommendedPosts />
+        </TabsContent>
+        <TabsContent value="subscription">
+          <SubscriptionPosts />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
