@@ -15,8 +15,34 @@ export type SimpleProfile = {
   username: string;
 };
 
-export async function getProfile(username: string) {
+export type ProfileData = {
+  username: string;
+  name: string;
+  email: string;
+};
+
+async function getUserData(username: string) {
   const response = await axios.get(`${BASE_PATH}/users/${username}`, {
+    headers: {
+      Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+    },
+    withCredentials: true,
+  });
+  return response.data as ProfileData;
+}
+
+async function editUserData(username: string, data: ProfileData) {
+  const response = await axios.put(`${BASE_PATH}/users/${username}`, data, {
+    headers: {
+      Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+    },
+    withCredentials: true,
+  });
+  return response.data as ProfileData;
+}
+
+export async function getProfile(username: string) {
+  const response = await axios.get(`${BASE_PATH}/users/${username}/profile`, {
     headers: {
       Authentication: "Bearer " + localStorage.getItem("jwt_token"),
     },
@@ -26,12 +52,15 @@ export async function getProfile(username: string) {
 }
 
 async function searchProfiles(username: string) {
-  const response = await axios.get(`${BASE_PATH}/users/search?name=${username}`, {
-    headers: {
-      Authentication: "Bearer " + localStorage.getItem("jwt_token"),
-    },
-    withCredentials: true,
-  });
+  const response = await axios.get(
+    `${BASE_PATH}/users/search?name=${username}`,
+    {
+      headers: {
+        Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+      },
+      withCredentials: true,
+    }
+  );
   return response;
 }
 
@@ -50,7 +79,12 @@ export async function signIn(username: string, password: string) {
   return response;
 }
 
-export async function signUp(name: string, email: string, username: string, password: string) {
+export async function signUp(
+  name: string,
+  email: string,
+  username: string,
+  password: string
+) {
   const response = await axios.post(
     `${BASE_PATH}/auth/signup`,
     {
@@ -97,22 +131,28 @@ async function unfollow(subjectUsername: string) {
 }
 
 async function getSubscriptions(username: string) {
-  const response = await axios.get(`${BASE_PATH}/users/${username}/subscriptions`, {
-    headers: {
-      Authentication: "Bearer " + localStorage.getItem("jwt_token"),
-    },
-    withCredentials: true,
-  });
+  const response = await axios.get(
+    `${BASE_PATH}/users/${username}/subscriptions`,
+    {
+      headers: {
+        Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+      },
+      withCredentials: true,
+    }
+  );
   return response.data as SimpleProfile[];
 }
 
 async function getSubscribers(username: string) {
-  const response = await axios.get(`${BASE_PATH}/users/${username}/subscribers`, {
-    headers: {
-      Authentication: "Bearer " + localStorage.getItem("jwt_token"),
-    },
-    withCredentials: true,
-  });
+  const response = await axios.get(
+    `${BASE_PATH}/users/${username}/subscribers`,
+    {
+      headers: {
+        Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+      },
+      withCredentials: true,
+    }
+  );
   return response.data as SimpleProfile[];
 }
 
@@ -121,5 +161,7 @@ export default {
   unfollow,
   searchProfiles,
   getSubscriptions,
-  getSubscribers
-}
+  getSubscribers,
+  getUserData,
+  editUserData
+};

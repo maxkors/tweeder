@@ -1,10 +1,5 @@
 "use client";
 
-import { TweetData, getAllTweets } from "@/query/tweetClient";
-import { useQuery } from "@tanstack/react-query";
-import Tweet from "./Tweet";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import SubscriptionPosts from "./SubscriptionPosts";
 import RecommendedPosts from "./RecommendedPosts";

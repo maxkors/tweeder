@@ -77,9 +77,14 @@ const ProfileCard = ({ data }: Props) => {
       </p>
       <div className="flex">
         {data.username === username && (
-          <Button className="mt-3 mx-2" onClick={onSignOutClickHandler}>
-            Sign out
-          </Button>
+          <>
+            <Button className="mt-3 mx-2" onClick={onSignOutClickHandler}>
+              Sign out
+            </Button>
+            <Button className="mt-3 mx-2" onClick={() => router.push(`/users/${username}/profile`)}>
+              Edit profile
+            </Button>
+          </>
         )}
         {data.username !== username && followButton}
         {data.username !== username && (
