@@ -118,6 +118,29 @@ const Tweet = ({
     );
   };
 
+  const renderDate = (date: string) => {
+    const second = 1000;
+    const minute = second * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+    
+    const timePassed = Date.now() - dayjs(date).toDate().getTime();
+    
+    let dateString = "";
+
+    if (timePassed < minute) {
+      dateString = Math.floor(timePassed / second) + "s";
+    } else if (timePassed < hour) {
+      dateString = Math.floor(timePassed / minute) + "m";
+    } else if (timePassed < day) {
+      dateString = Math.floor(timePassed / hour) + "h";
+    } else {
+      dateString = dayjs(date).format("MMM D");
+    }
+
+    return dateString;
+  };
+
   return (
     <article
       className="border-b-[1px] border-gray-200 p-2 hover:bg-gray-50 cursor-pointer"
@@ -138,7 +161,8 @@ const Tweet = ({
           @{tweetData.user.username}
         </span>
         <span className="text-gray-600">
-          {dayjs(tweetData.dateTime).format("H:mm MMM D")}
+          {/* {dayjs(tweetData.dateTime).format("H:mm MMM D")} */}
+          {renderDate(tweetData.dateTime)}
         </span>
 
         <DropdownMenu>

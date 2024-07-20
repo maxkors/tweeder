@@ -115,12 +115,12 @@ const Navigation = () => {
                 <p className="hidden lg:block">Post</p>
               </Button>
             </DialogTrigger>
-            <DialogContent className="top-[20vh] m-20">
+            <DialogContent className="top-[20vh]">
               <DialogHeader>
                 <DialogTitle>Write your post</DialogTitle>
               </DialogHeader>
               <form
-                className="border-b-[1px] border-gray-200 p-2"
+                className="p-2"
                 onSubmit={onSubmitHandler}
               >
                 <Textarea name="text" className="resize-none mb-3" />
