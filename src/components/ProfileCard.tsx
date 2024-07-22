@@ -9,8 +9,13 @@ import UsersPostsTab from "./UsersPostsTab";
 import LikedPostsTab from "./LikedPostsTab";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "./ui/avatar";
 
 type Props = {
   data: Profile;
@@ -57,10 +62,21 @@ const ProfileCard = ({ data }: Props) => {
     );
   };
 
+  useEffect(() => {console.log(data)}, [])
+
   return (
     <div>
-      <p className="font-bold mx-2">{data.name}</p>
-      <p className="text-gray-500 mx-2">@{data.username}</p>
+      <div className="flex p-2">
+        <Avatar className="mr-2">
+          <AvatarImage src={data.avatarUrl} />
+          <AvatarFallback>{data.name[0].toUpperCase()}</AvatarFallback>
+        </Avatar>
+        <div className="leading-[1.3rem]">
+          <p className="font-bold mx-2">{data.name}</p>
+          <p className="text-gray-500 mx-2">@{data.username}</p>
+        </div>
+      </div>
+
       <p className="mx-2">
         <Link
           href={`/users/${data.username}/following`}
@@ -81,7 +97,10 @@ const ProfileCard = ({ data }: Props) => {
             <Button className="mt-3 mx-2" onClick={onSignOutClickHandler}>
               Sign out
             </Button>
-            <Button className="mt-3 mx-2" onClick={() => router.push(`/users/${username}/profile`)}>
+            <Button
+              className="mt-3 mx-2"
+              onClick={() => router.push(`/users/${username}/profile`)}
+            >
               Edit profile
             </Button>
           </>

@@ -14,7 +14,7 @@ import {
 } from "./ui/dialog";
 import { Textarea } from "./ui/textarea";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { createPost, createPost2, getAllTweets } from "@/query/tweetClient";
+import { createPost, getAllTweets } from "@/query/tweetClient";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";

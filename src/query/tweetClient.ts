@@ -6,6 +6,7 @@ export type User = {
   id: number;
   username: string;
   name: string;
+  avatarUrl: string;
 };
 
 export type Media = {
@@ -125,15 +126,6 @@ export async function createPost(text: string, media: any, parentPostId?: number
       media,
       parentPostId: parentPostId || null,
     },
-    getMultipartConfigWithToken()
-  );
-  return response;
-}
-
-export async function createPost2(formData: FormData) {
-  const response = await axios.post(
-    `${BASE_PATH}/tweets`,
-    formData,
     getMultipartConfigWithToken()
   );
   return response;

@@ -31,6 +31,7 @@ import { IoIosMore } from "react-icons/io";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type Props = {
   tweetData: ChildData | TweetDataWithChildren;
@@ -123,9 +124,9 @@ const Tweet = ({
     const minute = second * 60;
     const hour = minute * 60;
     const day = hour * 24;
-    
+
     const timePassed = Date.now() - dayjs(date).toDate().getTime();
-    
+
     let dateString = "";
 
     if (timePassed < minute) {
@@ -147,23 +148,34 @@ const Tweet = ({
       onClick={onPostClickHandler}
       data-id={tweetData.id}
     >
-      <div className="flex mb-1">
-        <span
-          className="mr-2 font-bold hover:underline"
-          onClick={onUserClickHandler}
-        >
-          {tweetData.user.name}
-        </span>
-        <span
-          className="mr-2 text-gray-600 hover:underline"
-          onClick={onUserClickHandler}
-        >
-          @{tweetData.user.username}
-        </span>
-        <span className="text-gray-600">
-          {/* {dayjs(tweetData.dateTime).format("H:mm MMM D")} */}
-          {renderDate(tweetData.dateTime)}
-        </span>
+      <div className="flex mb-2 items-center leading-[1.3rem]">
+        <Avatar className="mr-2">
+          <AvatarImage src={tweetData.user.avatarUrl} />
+          <AvatarFallback>
+            {tweetData.user.name[0].toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex flex-col">
+          <span
+            className="mr-2 font-bold hover:underline"
+            onClick={onUserClickHandler}
+          >
+            {tweetData.user.name}
+          </span>
+          <div>
+            <span
+              className="text-gray-600 hover:underline"
+              onClick={onUserClickHandler}
+            >
+              @{tweetData.user.username}
+            </span>
+            {" · "}
+            <span className="text-gray-600">
+              {/* {dayjs(tweetData.dateTime).format("H:mm MMM D")} */}
+              {renderDate(tweetData.dateTime)}
+            </span>
+          </div>
+        </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

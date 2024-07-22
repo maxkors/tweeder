@@ -4,6 +4,7 @@ import { BASE_PATH } from "./paths";
 export type Profile = {
   name: string;
   username: string;
+  avatarUrl: string;
   subscriptionsCount: number;
   subscribersCount: number;
   isFollowed: boolean;
@@ -13,12 +14,14 @@ export type SimpleProfile = {
   id: number;
   name: string;
   username: string;
+  avatarUrl: string;
 };
 
 export type ProfileData = {
   username: string;
   name: string;
   email: string;
+  avatarUrl: string;
 };
 
 async function getUserData(username: string) {
@@ -31,13 +34,29 @@ async function getUserData(username: string) {
   return response.data as ProfileData;
 }
 
-async function editUserData(username: string, data: ProfileData) {
-  const response = await axios.put(`${BASE_PATH}/users/${username}`, data, {
-    headers: {
-      Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+async function editUserData(
+  currentUsername: string,
+  username: string,
+  name: string,
+  email: string,
+  avatar: any
+) {
+  const response = await axios.put(
+    `${BASE_PATH}/users/${currentUsername}`,
+    {
+      username,
+      name,
+      email,
+      avatar
     },
-    withCredentials: true,
-  });
+    {
+      headers: {
+        Authentication: "Bearer " + localStorage.getItem("jwt_token"),
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true,
+    }
+  );
   return response.data as ProfileData;
 }
 
@@ -163,5 +182,5 @@ export default {
   getSubscriptions,
   getSubscribers,
   getUserData,
-  editUserData
+  editUserData,
 };
